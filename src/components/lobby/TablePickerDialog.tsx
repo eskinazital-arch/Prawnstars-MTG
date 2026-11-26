@@ -53,13 +53,15 @@ export function TablePickerDialog({
         if (!next) onCancel();
       }}
     >
-      <DialogContent className="sm:max-w-3xl overflow-y-auto">
+      {/* On a sideways phone the dialog is taller than the screen: keep the
+          buttons pinned, scroll the felts, and drop the seat preview. */}
+      <DialogContent className="flex max-h-[calc(100dvh-1rem)] flex-col overflow-hidden sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>Choose your table</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-          <div className="flex items-center justify-center rounded-xl border border-border bg-canvas-background p-3">
+        <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] [@media(max-height:520px)]:sm:grid-cols-1">
+          <div className="flex items-center justify-center rounded-xl border border-border bg-canvas-background p-3 [@media(max-height:520px)]:hidden">
             <OpenTableSeats
               players={players}
               maxPlayers={maxPlayers}
@@ -71,7 +73,7 @@ export function TablePickerDialog({
               centerContent={centerContent}
             />
           </div>
-          <div className="grid grid-cols-3 content-start gap-2 rounded-xl border border-border bg-canvas-background p-3 sm:grid-cols-4">
+          <div className="grid grid-cols-3 content-start gap-2 rounded-xl border border-border bg-canvas-background p-3 sm:grid-cols-4 [@media(max-height:520px)]:grid-cols-6">
             {BOARD_BACKGROUNDS.map((option) => {
               const isSelected = option.id === background;
               return (
@@ -105,7 +107,7 @@ export function TablePickerDialog({
             })}
           </div>
         </div>
-        <div className="flex justify-end gap-2">
+        <div className="flex shrink-0 justify-end gap-2">
           <Button variant="ghost" onClick={onCancel}>
             Back
           </Button>

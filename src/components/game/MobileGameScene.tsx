@@ -229,11 +229,23 @@ export function MobileGameScene({
                 mulligan {mulliganAction.mulliganCount}
               </span>
             ) : null}
-            <Button variant="primary" size="sm" onClick={mulliganAction.onMulliganKeep}>
-              KEEP
+            {/* Keep is the main choice: club green so it stands out on the dark
+                board (the theme's near-black primary vanishes there). */}
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={mulliganAction.onMulliganKeep}
+              className="min-h-11 rounded-full bg-[#1F6B4A] px-6 font-semibold text-white hover:bg-[#17553A]"
+            >
+              Keep hand
             </Button>
-            <Button variant="outline" size="sm" onClick={mulliganAction.onMulliganDraw}>
-              MULLIGAN
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={mulliganAction.onMulliganDraw}
+              className="min-h-11 rounded-full border-white/40 bg-transparent px-5 text-white hover:bg-white/10"
+            >
+              Mulligan
             </Button>
           </div>
         )}
