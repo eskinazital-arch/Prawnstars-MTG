@@ -6,6 +6,7 @@ import { AppSelect, AppSelectOption } from "@/components/ui/AppSelect";
 import { podDeckKey, podOwners, type PodDeck } from "@/lib/podDecks";
 import { startPodDeckSync, usePodDecksStore } from "@/stores/usePodDecksStore";
 import { getGroupKey } from "@/lib/groupKey";
+import { ShareDecksDialog } from "@/components/play/ShareDecksDialog";
 import { memberDisplayName, memberFromKey } from "@/lib/podMembers";
 
 interface PodDeckShelfProps {
@@ -21,6 +22,8 @@ export function PodDeckShelf({ pendingDeckId, onOpenSavedDeck, onPlayDeck }: Pod
   const setMe = usePodDecksStore((state) => state.setMe);
   const addToMyDecks = usePodDecksStore((state) => state.addToMyDecks);
   const [open, setOpen] = useState(true);
+  const [sharing, setSharing] = useState(false);
+  const keyMember = memberFromKey(getGroupKey());
 
   useEffect(() => startPodDeckSync(), []);
 
@@ -36,10 +39,20 @@ export function PodDeckShelf({ pendingDeckId, onOpenSavedDeck, onPlayDeck }: Pod
       open={open}
       onOpenChange={setOpen}
     >
-      {memberFromKey(getGroupKey()) ? (
-        <p className="mb-4 px-2 text-ui-meta text-muted-foreground">
-          {`You came in as ${memberDisplayName(me ?? "")}. Your decks are on your shelf and stay in sync with the pod.`}
-        </p>
+      {keyMember ? (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-2">
+          <p className="text-ui-meta text-muted-foreground">
+            Everyone&apos;s decks, playable by anyone. Share yours so the pod can borrow them.
+          </p>
+          <button
+            type="button"
+            onClick={() => setSharing(true)}
+            className="inline-flex min-h-9 items-center rounded-full bg-primary px-4 text-ui-label font-medium text-primary-foreground hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Share my decks
+          </button>
+          <ShareDecksDialog member={keyMember} open={sharing} onOpenChange={setSharing} />
+        </div>
       ) : (
         <div className="mb-4 flex flex-wrap items-center gap-2 px-2">
           <label htmlFor="pod-me" className="text-ui-label font-medium">

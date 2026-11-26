@@ -184,7 +184,15 @@ async fn run_health_listener(
     let app = Router::new()
         .route("/health", get(health_handler))
         .route("/metrics", get(metrics_handler))
-        .with_state((state, metrics_handle));
+        .with_state((state.clone(), metrics_handle));
+    // The pod's shared deck shelf, when a folder is configured for it.
+    let app = match std::env::var("MANABREW_POD_DECKS_DIR") {
+        Ok(dir) if !dir.trim().is_empty() => {
+            info!("[server] pod deck shelf in {}", dir);
+            app.merge(crate::pod_decks::router(dir.into(), state))
+        }
+        _ => app,
+    };
 
     let listener = match TcpListener::bind(addr).await {
         Ok(l) => l,

@@ -20,7 +20,14 @@ import { fetchDeckBySource, parseDeckListText, parseDeckUrl } from "../src/lib/d
 
 const NL = String.fromCharCode(10);
 const EM_DASH = String.fromCharCode(0x2014);
-const POD_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "..", "public/pod_decks");
+// --dir=<folder under public/> writes somewhere else, e.g. cedh_decks for the
+// cEDH meta shelf (scripts/cedh-meta.py). Defaults to the pod shelf.
+const POD_DIR = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "public",
+  (process.argv.find((a) => a.startsWith("--dir=")) ?? "--dir=pod_decks").slice("--dir=".length),
+);
 const SCRYFALL_API = "https://api.scryfall.com";
 const SCRYFALL_HEADERS = {
   "User-Agent": "PrawnstarsMTG/0.1",
@@ -326,7 +333,7 @@ async function main() {
   const ids = await rebuildIndex();
 
   const total = resolved.reduce((sum, r) => sum + r.entry.count, 0);
-  console.log(`Saved ${label} for ${owner}: ${total} cards -> public/pod_decks/${slug}.json`);
+  console.log(`Saved ${label} for ${owner}: ${total} cards -> ${POD_DIR}/${slug}.json`);
   if (commanders.length > 0 && total !== 100) {
     console.warn(`  note: a Commander deck should have 100 cards; this one has ${total}.`);
   }

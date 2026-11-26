@@ -72,6 +72,8 @@ Start-Part "relay" (Join-Path $Bin "manabrew-server.exe") @() @{
   MANABREW_SERVER_KEY = $GroupPassword
   MANABREW_DIRECT_TRANSPORT = "1"; MANABREW_GUEST_LOBBY_CHAT = "1"
   MANABREW_MEMBER_KEYS = $MemberKeys
+  # Decks members share from the app (git-ignored, back it up with the PC).
+  MANABREW_POD_DECKS_DIR = (Join-Path $Here "data/pod-decks")
   MANABREW_ICE_SERVERS = "stun:stun.l.google.com:19302"
   RUST_LOG = "manabrew_server=info"
 }

@@ -81,6 +81,14 @@ public final class ManaBrewEngineAdapter {
         initialized = true;
     }
 
+    private static boolean envFlag(final String name, final boolean fallback) {
+        final String value = System.getenv(name);
+        if (value == null || value.isBlank()) {
+            return fallback;
+        }
+        return value.equals("1") || value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes");
+    }
+
     public SessionHandle startGame(final StartGameRequest request) {
         synchronized (LIVE_SESSIONS) {
             return startGameLocked(request);
@@ -161,6 +169,11 @@ public final class ManaBrewEngineAdapter {
 
         final Match match = new Match(rules, registeredPlayers, "ManaBrew");
         final Game game = match.createGame();
+        // Forge desktop turns on the lookahead (flat Monte Carlo) AI by default
+        // (MATCH_AI_FLAT_MONTE_CARLO); a bare Match leaves it off, which leaves
+        // bots on heuristics alone. FORGE_AI_LOOKAHEAD / _MAX switch it here.
+        game.AI_FLAT_MONTE_CARLO = envFlag("FORGE_AI_LOOKAHEAD", true);
+        game.AI_FLAT_MONTE_CARLO_MAX = game.AI_FLAT_MONTE_CARLO && envFlag("FORGE_AI_LOOKAHEAD_MAX", true);
         session.attach(match, game, botSeats, request.isSnapshotRecording());
         new CardCosmeticBindings(game, deckEntries, request.getPlayers());
         if (request.checkpointMetrics) {

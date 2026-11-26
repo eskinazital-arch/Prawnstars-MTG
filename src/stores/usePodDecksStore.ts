@@ -4,6 +4,7 @@ import { reserveGuestName } from "@/lib/guestName";
 import { getGroupKey } from "@/lib/groupKey";
 import { memberDisplayName, memberFromKey } from "@/lib/podMembers";
 import { loadPodDecks, podDeckKey, type PodDeck } from "@/lib/podDecks";
+import { fetchSharedPodDecks, loadCedhDecks } from "@/lib/clubDecks";
 import { useDeckStore } from "@/stores/useDeckStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 
@@ -28,6 +29,10 @@ interface PodDeckLink {
 interface PodDecksState {
   decks: PodDeck[];
   resolved: boolean;
+  /** The cEDH meta shelf (public/cedh_decks/). */
+  cedh: PodDeck[];
+  /** Reloads the shelves, e.g. after sharing a deck. */
+  refresh: () => Promise<void>;
   /** The pod member using this browser; their decks stay synced into My Decks. */
   me: string | null;
   links: Record<string, PodDeckLink>;
@@ -48,6 +53,7 @@ export const usePodDecksStore = create<PodDecksState>()(
   persist(
     (set, get) => ({
       decks: [],
+      cedh: [],
       resolved: false,
       me: null,
       links: {},
@@ -55,7 +61,12 @@ export const usePodDecksStore = create<PodDecksState>()(
         if (prefetchPromise) return prefetchPromise;
         prefetchPromise = (async () => {
           try {
-            set({ decks: await loadPodDecks(), resolved: true });
+            const [pod, shared, cedh] = await Promise.all([
+              loadPodDecks(),
+              fetchSharedPodDecks().catch(() => [] as PodDeck[]),
+              loadCedhDecks().catch(() => [] as PodDeck[]),
+            ]);
+            set({ decks: [...pod, ...shared], cedh, resolved: true });
           } catch (err) {
             set({ resolved: true });
             if (import.meta.env?.DEV) console.warn("[usePodDecks] prefetch failed:", err);
@@ -63,6 +74,10 @@ export const usePodDecksStore = create<PodDecksState>()(
           get().syncMine();
         })();
         return prefetchPromise;
+      },
+      refresh: () => {
+        prefetchPromise = null;
+        return get().prefetch();
       },
       setMe: (owner) => {
         set({ me: owner });
@@ -78,7 +93,14 @@ export const usePodDecksStore = create<PodDecksState>()(
           // The pod file changed: replace the old copy with the new list.
           deckStore.deleteSavedDeck(link.savedDeckId);
         }
-        const { owner: _owner, fingerprint: _fingerprint, engines: _engines, ...editorDeck } = deck;
+        const {
+          owner: _owner,
+          fingerprint: _fingerprint,
+          engines: _engines,
+          shared: _shared,
+          sharedId: _sharedId,
+          ...editorDeck
+        } = deck;
         const savedDeckId = deckStore.addSavedDeck({ ...editorDeck, id: undefined });
         set((state) => ({
           links: { ...state.links, [key]: { savedDeckId, fingerprint: deck.fingerprint } },
@@ -90,7 +112,8 @@ export const usePodDecksStore = create<PodDecksState>()(
         // Writing before My Decks loads from storage would be dropped or clobbered.
         if (!me || !resolved || !deckStoreHydrated()) return;
         for (const deck of decks) {
-          if (deck.owner === me) addToMyDecks(deck);
+          // A shared deck came from this player's own list, so it is already there.
+          if (deck.owner === me && !deck.shared) addToMyDecks(deck);
         }
       },
     }),

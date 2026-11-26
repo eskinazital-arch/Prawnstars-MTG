@@ -7,6 +7,8 @@ import { useDeckTextImport } from "@/components/editor/useDeckTextImport";
 import { CommunityDeckShelf } from "@/components/play/CommunityDeckShelf";
 import { OwnedDeckShelf } from "@/components/play/OwnedDeckShelf";
 import { PodDeckShelf } from "@/components/play/PodDeckShelf";
+import { CedhDeckShelf } from "@/components/play/CedhDeckShelf";
+import { ArchidektDeckShelf } from "@/components/play/ArchidektDeckShelf";
 import { PresetDeckShelf } from "@/components/play/PresetDeckShelf";
 import { Button } from "@/components/ui/button";
 import { isFeatureEnabled } from "@/featureFlags";
@@ -88,6 +90,12 @@ export function PlayDeckShelf({
       { state: { deckEditorFromList: true } },
     );
   }
+  function openSavedId(id: string) {
+    navigate(
+      { pathname: ROUTES.DECK_EDITOR, search: `?deck=${encodeURIComponent(id)}` },
+      { state: { deckEditorFromList: true } },
+    );
+  }
   function buildFromScratch() {
     setChoiceOpen(false);
     const store = useDeckStore.getState();
@@ -149,14 +157,15 @@ export function PlayDeckShelf({
       <div className="space-y-5">
         <PodDeckShelf
           pendingDeckId={pendingDeckId}
-          onOpenSavedDeck={(id) =>
-            navigate(
-              { pathname: ROUTES.DECK_EDITOR, search: `?deck=${encodeURIComponent(id)}` },
-              { state: { deckEditorFromList: true } },
-            )
-          }
+          onOpenSavedDeck={openSavedId}
           onPlayDeck={onPlayPreset}
         />
+        <CedhDeckShelf
+          pendingDeckId={pendingDeckId}
+          onOpenSavedDeck={openSavedId}
+          onPlayDeck={onPlayPreset}
+        />
+        <ArchidektDeckShelf onOpenSavedDeck={openSavedId} />
         <OwnedDeckShelf
           decks={ownedDecks}
           lastPlayedDeckId={lastPlayedDeckId}

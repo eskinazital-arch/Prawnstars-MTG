@@ -22,6 +22,10 @@ export type PodDeck = PresetDeck & {
   owner: string;
   /** Changes whenever the deck file's list changes, so synced copies can update. */
   fingerprint: string;
+  /** Shared from the app and kept on the club server (see clubDecks.ts). */
+  shared?: boolean;
+  /** The server's id for a shared deck, used to remove it. */
+  sharedId?: string;
 };
 
 // FNV-1a, 32-bit. Only used to notice that a deck file changed.

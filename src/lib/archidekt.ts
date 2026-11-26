@@ -10,6 +10,8 @@ export interface ArchidektSearchResult {
   format: string;
   description: string;
   tags: string[];
+  /** The owner's own Commander bracket rating (1-5), when they set one. */
+  bracket?: number;
 }
 
 export interface ArchidektDeckCard {
@@ -101,6 +103,7 @@ interface RawSearchResult {
   deckFormat?: number;
   description?: string | null;
   tags?: unknown;
+  edhBracket?: number | null;
 }
 
 interface RawSearchResponse {
@@ -115,6 +118,7 @@ function mapSearchResult(d: RawSearchResult): ArchidektSearchResult {
     format: (d.deckFormat != null && ARCHIDEKT_FORMATS[d.deckFormat]) || "",
     description: normalizeDescription(d.description),
     tags: normalizeTags(d.tags),
+    bracket: typeof d.edhBracket === "number" ? d.edhBracket : undefined,
   };
 }
 
@@ -128,12 +132,14 @@ export function parseArchidektUrl(input: string): string | null {
 
 export async function searchArchidekt(
   query: string,
-  opts: RequestOptions & { pageSize?: number; formatId?: string } = {},
+  opts: RequestOptions & { pageSize?: number; formatId?: string; bracket?: number } = {},
 ): Promise<ArchidektSearchResult[]> {
   const fetchFn = resolveFetch(opts);
   const pageSize = opts.pageSize ?? ARCHIDEKT_PAGE_SIZE;
   const formatCode = opts.formatId ? GAME_FORMAT_TO_ARCHIDEKT[opts.formatId] : undefined;
-  const formatParam = formatCode ? `&deckFormat=${formatCode}` : "";
+  const formatParam =
+    (formatCode ? `&deckFormat=${formatCode}` : "") +
+    (opts.bracket ? `&edhBracket=${opts.bracket}` : "");
   const url = `https://archidekt.com/api/decks/v3/?name=${encodeURIComponent(query)}&pageSize=${pageSize}&orderBy=-viewCount${formatParam}`;
   const res = await fetchFn(url, {
     headers: { "User-Agent": USER_AGENT },

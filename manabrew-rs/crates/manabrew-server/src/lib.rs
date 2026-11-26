@@ -10,6 +10,7 @@ pub mod identity;
 pub mod lobby;
 pub mod matchmaking;
 pub mod metrics;
+pub mod pod_decks;
 pub mod protocol;
 pub mod replay;
 pub mod room;

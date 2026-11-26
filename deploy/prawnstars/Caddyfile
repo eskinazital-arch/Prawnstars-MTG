@@ -18,6 +18,26 @@ http://:8080 {
 		reverse_proxy 127.0.0.1:9443
 	}
 
+	# The pod's shared deck shelf, served by the relay's web side. Only
+	# /pod-api is passed through; the relay's /health and /metrics stay local.
+	handle /pod-api/* {
+		reverse_proxy 127.0.0.1:9444
+	}
+
+	# Archidekt community decks. Their API sends no CORS headers.
+	@archidekt path_regexp archidekt ^/archidekt-api/(.*)$
+	handle @archidekt {
+		rewrite * /api/{re.archidekt.1}
+		reverse_proxy https://archidekt.com {
+			header_up Host archidekt.com
+			header_up -X-Forwarded-Host
+			header_up -X-Forwarded-For
+			header_down -Access-Control-Allow-Origin
+			header_down -Set-Cookie
+		}
+		header Cross-Origin-Resource-Policy "same-origin"
+	}
+
 	# Runtime config (works out the relay address from the page's own link).
 	@config path /config.js
 	handle @config {
