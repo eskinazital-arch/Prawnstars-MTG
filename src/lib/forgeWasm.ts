@@ -122,6 +122,9 @@ export function forgeWasmGate(): EngineGate {
 }
 
 export function isForgeWasmSupported(): boolean {
+  // A build without the engine files (they need Oracle GraalVM Web Image to
+  // build) cannot run Forge in the browser; games go to a hosted engine.
+  if (!FORGE_LAUNCHER_URL || !FORGE_WASM_URL) return false;
   if (typeof window === "undefined") return true;
   const gate = forgeWasmGate();
   return gate === "in_browser" || gate === "disabled";

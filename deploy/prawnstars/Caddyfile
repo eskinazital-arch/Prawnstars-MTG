@@ -2,6 +2,7 @@
 # 127.0.0.1:8080 and forwards /relay to the relay on 127.0.0.1:9443. A
 # Cloudflare Tunnel publishes this one local address over HTTPS, so nothing on
 # this PC is opened to the internet directly. Started by start-prawnstars.ps1.
+# The outside-service proxies and asset caching follow ops/web.Caddyfile.
 {
 	admin off
 	auto_https off
@@ -22,6 +23,76 @@ http://:8080 {
 	handle @config {
 		header Cache-Control "no-store"
 		file_server
+	}
+
+	# The one mutable file under /wasm/: it names the current card archive.
+	handle /wasm/cardset.manifest.json {
+		header {
+			Cache-Control "no-cache"
+			Cross-Origin-Opener-Policy "same-origin"
+			Cross-Origin-Embedder-Policy "require-corp"
+			Cross-Origin-Resource-Policy "same-origin"
+		}
+		file_server
+	}
+
+	# Hashed build files never change, so browsers keep them for a year and
+	# the big engine downloads only once per browser.
+	@static path /assets/* /wasm/*
+	handle @static {
+		header {
+			Cache-Control "public, immutable, max-age=31536000"
+			Cross-Origin-Opener-Policy "same-origin"
+			Cross-Origin-Embedder-Policy "require-corp"
+			Cross-Origin-Resource-Policy "same-origin"
+		}
+		file_server
+	}
+
+	@scryfall path_regexp scryfall ^/scryfall-symbols/(.*)$
+	handle @scryfall {
+		rewrite * /card-symbols/{re.scryfall.1}
+		reverse_proxy https://svgs.scryfall.io {
+			header_up Host svgs.scryfall.io
+			header_down -Access-Control-Allow-Origin
+			header_down -Cross-Origin-Resource-Policy
+			header_down -Cache-Control
+		}
+		header Cache-Control "public, max-age=604800"
+		header Cross-Origin-Resource-Policy "same-origin"
+	}
+
+	@edhrec path_regexp edhrec ^/edhrec-api/combos/([a-z-]+)/([0-9-]+)\.json$
+	handle @edhrec {
+		rewrite * /pages/combos/{re.edhrec.1}/{re.edhrec.2}.json
+		reverse_proxy https://json.edhrec.com {
+			header_up Host json.edhrec.com
+			header_down -Access-Control-Allow-Origin
+		}
+		header Cross-Origin-Resource-Policy "same-origin"
+	}
+
+	# Commander Spellbook: combo checks for bracket estimates.
+	@spellbook path_regexp spellbook ^/spellbook-api/(.*)$
+	handle @spellbook {
+		rewrite * /{re.spellbook.1}
+		reverse_proxy https://backend.commanderspellbook.com {
+			header_up Host backend.commanderspellbook.com
+			header_up -X-Forwarded-Host
+			header_down -Access-Control-Allow-Origin
+		}
+		header Cross-Origin-Resource-Policy "same-origin"
+	}
+
+	@cubecobra path_regexp cubecobra ^/cubecobra-download/cube/api/cubeJSON/([A-Za-z0-9-]+)$
+	handle @cubecobra {
+		rewrite * /cube/api/cubeJSON/{re.cubecobra.1}
+		reverse_proxy https://cubecobra.com {
+			header_up Host cubecobra.com
+			header_down -Access-Control-Allow-Origin
+			header_down -Set-Cookie
+		}
+		header Cross-Origin-Resource-Policy "same-origin"
 	}
 
 	handle {

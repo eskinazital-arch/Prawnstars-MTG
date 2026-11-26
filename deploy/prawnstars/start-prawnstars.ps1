@@ -81,7 +81,11 @@ Start-Part "node" (Join-Path $Bin "self-hosted-node.exe") @() @{
   SELF_HOSTED_NODE_SERVER_KEY = $GroupPassword
   SELF_HOSTED_NODE_ENGINE_BACKEND = "forge"
   SELF_HOSTED_NODE_ROOM_NAME = "Prawnstars Pod"
-  SELF_HOSTED_NODE_MAX_GAMES = "2"
+  SELF_HOSTED_NODE_MAX_GAMES = "4"
+  # The node must be built with the Forge engine:
+  #   cargo build --release -p self-hosted-node --features java-forge
+  SELF_HOSTED_NODE_FORGE_HARNESS_JAR = (Join-Path $Repo "forge-harness/target/forge-harness-jar-with-dependencies.jar")
+  SELF_HOSTED_NODE_FORGE_ASSETS_DIR = (Join-Path $Repo "forge/forge-gui")
   RUST_LOG = "info"
 }
 Start-Part "caddy" "caddy" @("run", "--config", (Join-Path $Here "Caddyfile"), "--adapter", "caddyfile") @{

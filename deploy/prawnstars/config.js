@@ -7,5 +7,8 @@
   var scheme = window.location.protocol === "https:" ? "wss://" : "ws://";
   window.__MANABREW_RUNTIME__ = {
     relay: { host: scheme + window.location.host + "/relay", port: 443 },
+    // This build has no in-browser Forge engine, so practice games vs the AI
+    // run on the PC's Forge server instead (a free pod table).
+    hostedAiEnabled: true,
   };
 })();
