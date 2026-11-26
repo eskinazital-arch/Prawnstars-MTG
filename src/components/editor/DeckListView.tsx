@@ -725,7 +725,7 @@ function DraggableStackCard({
       {unsupported && (
         <div
           className="absolute top-1 right-1 z-30 rounded-full bg-warning/90 p-0.5 text-background shadow"
-          title={`Unsupported by the Manabrew and Forge engines`}
+          title={`Unsupported by the Rust and Forge engines`}
         >
           <AlertTriangle className="h-3 w-3" />
         </div>
@@ -1016,7 +1016,7 @@ function CardVisual({
       {unsupported && (
         <div
           className="absolute top-1 right-1 z-30 rounded-full bg-warning/90 p-0.5 text-background shadow"
-          title={`Unsupported by the Manabrew and Forge engines`}
+          title={`Unsupported by the Rust and Forge engines`}
         >
           <AlertTriangle className="h-3 w-3" />
         </div>
@@ -1183,15 +1183,13 @@ function CardRow({
       {unsupported && (
         <AlertTriangle
           className="h-3 w-3 text-warning shrink-0"
-          aria-label={`Card unsupported by the Manabrew and Forge engines`}
+          aria-label={`Card unsupported by the Rust and Forge engines`}
         />
       )}
       <span
         className={cn("text-ui-label flex-1 truncate", unsupported && "text-warning")}
         title={
-          unsupported
-            ? `${displayName} - unsupported by the Manabrew and Forge engines`
-            : displayName
+          unsupported ? `${displayName} - unsupported by the Rust and Forge engines` : displayName
         }
       >
         {displayName}

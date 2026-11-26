@@ -1157,8 +1157,8 @@ export function DeckBuilder({
       if (!quiet && hasUnsupportedCards) {
         toast.warning(
           unsupportedNames.size === 1
-            ? `Saved "${deckToSave.name}" — one card is unsupported by the Manabrew and Forge engines`
-            : `Saved "${deckToSave.name}" — ${unsupportedNames.size} cards are unsupported by the Manabrew and Forge engines`,
+            ? `Saved "${deckToSave.name}" — one card is unsupported by the Rust and Forge engines`
+            : `Saved "${deckToSave.name}" — ${unsupportedNames.size} cards are unsupported by the Rust and Forge engines`,
         );
       } else if (!quiet && !deckValidation.legal) {
         const validationError = deckValidation.errors[0] ?? `deck is not legal in this format`;
@@ -1248,8 +1248,8 @@ export function DeckBuilder({
     if (hasUnsupportedCards) {
       toast.warning(
         unsupportedNames.size === 1
-          ? `Saved "${currentDeck.name}" as draft — one card is unsupported by the Manabrew and Forge engines`
-          : `Saved "${currentDeck.name}" as draft — ${unsupportedNames.size} cards are unsupported by the Manabrew and Forge engines`,
+          ? `Saved "${currentDeck.name}" as draft — one card is unsupported by the Rust and Forge engines`
+          : `Saved "${currentDeck.name}" as draft — ${unsupportedNames.size} cards are unsupported by the Rust and Forge engines`,
       );
     } else {
       toast.success(`Draft "${currentDeck.name}" saved`);
@@ -2008,8 +2008,8 @@ export function DeckBuilder({
                 title={
                   hasUnsupportedCards
                     ? unsupportedNames.size === 1
-                      ? `One card is unsupported by the Manabrew and Forge engines`
-                      : `${unsupportedNames.size} cards are unsupported by the Manabrew and Forge engines`
+                      ? `One card is unsupported by the Rust and Forge engines`
+                      : `${unsupportedNames.size} cards are unsupported by the Rust and Forge engines`
                     : !isDeckLegal
                       ? `${deckValidation.errors[0] ?? `Deck is not legal in this format`} — saves with a warning`
                       : hasUnsavedChanges

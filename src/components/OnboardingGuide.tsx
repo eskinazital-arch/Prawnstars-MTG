@@ -1,5 +1,4 @@
-import { Eye, Github, Layers, Move, Swords, type LucideIcon } from "lucide-react";
-import { GITHUB_REPO_URL } from "@/lib/constants";
+import { Eye, Layers, Move, Swords, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsTouch } from "@/hooks/useBreakpoints";
 interface GuideSection {
@@ -35,15 +34,6 @@ const GUIDE_SECTIONS: GuideSection[] = [
     heading: `Customize your deck`,
     icon: Layers,
     body: `Open the Deck Editor to build decks from scratch, import existing lists, and fine-tune every card before you sit down at the table.`,
-  },
-  {
-    heading: `Host your own Manabrew rooms`,
-    icon: Github,
-    body: `Want to run a private server for your playgroup?`,
-    link: {
-      label: `Find out how on GitHub`,
-      href: GITHUB_REPO_URL,
-    },
   },
 ];
 

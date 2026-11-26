@@ -323,7 +323,7 @@ export default function Settings() {
           <div className="rounded-lg border bg-card/40 p-4 space-y-3 max-w-xl">
             <Label>Card Image Cache</Label>
             <p className="text-ui-body text-muted-foreground">
-              Drops Manabrew&apos;s in-memory card textures and image object URLs, clears the
+              Drops Prawnstars MTG&apos;s in-memory card textures and image object URLs, clears the
               CacheStorage API, then reloads so every card image is fetched fresh. Use this if
               battlefield card art fails to appear. For a full browser HTTP cache wipe, use the
               browser&apos;s &quot;Empty Cache and Hard Reload&quot; (DevTools open → right-click
@@ -737,7 +737,7 @@ export default function Settings() {
 
             <PreferenceCard
               title={`Battlefield Card Style`}
-              description={`Manabrew shows a composed card with current game information. Realistic shows the printed scan. Art-forward uses artwork with compact labels. This setting only affects battlefield cards.`}
+              description={`Prawnstars shows a composed card with current game information. Realistic shows the printed scan. Art-forward uses artwork with compact labels. This setting only affects battlefield cards.`}
             >
               <div className="flex flex-wrap items-start gap-4">
                 <div className="flex-1 flex flex-wrap content-start gap-2">
@@ -760,7 +760,7 @@ export default function Settings() {
                     size="sm"
                     onClick={() => prefs.setBattlefieldCardStyle("frame")}
                   >
-                    Manabrew
+                    Prawnstars
                   </Button>
                 </div>
                 <BattlefieldStylePreview style={prefs.battlefieldCardStyle} />
@@ -881,7 +881,7 @@ export default function Settings() {
 
             <PreferenceCard
               title={`Peer to Peer`}
-              description={`Skip manabrew servers and connect directly to the other players at the table. This shares your IP address with the people you play with, and only activates if every player in the game has it enabled.`}
+              description={`Skip relay servers and connect directly to the other players at the table. This shares your IP address with the people you play with, and only activates if every player in the game has it enabled.`}
             >
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -903,7 +903,7 @@ export default function Settings() {
 
             <PreferenceCard
               title={`Hand Card Style`}
-              description={`Manabrew cards show current game information. Realistic shows the printed scan. Each card can still be switched.`}
+              description={`Prawnstars cards show current game information. Realistic shows the printed scan. Each card can still be switched.`}
             >
               <div className="flex flex-wrap gap-2">
                 {INLINE_CARD_STYLE_OPTIONS.map((option) => (
@@ -921,7 +921,7 @@ export default function Settings() {
 
             <PreferenceCard
               title={`Default Stack Card View`}
-              description={`Choose the initial Manabrew or Realistic view for stack cards. Switching views does not flip the card's front/back face.`}
+              description={`Choose the initial Prawnstars or Realistic view for stack cards. Switching views does not flip the card's front/back face.`}
             >
               <div className="flex flex-wrap gap-2">
                 {INLINE_CARD_STYLE_OPTIONS.map((option) => (
@@ -939,7 +939,7 @@ export default function Settings() {
 
             <PreferenceCard
               title={`Card Preview Style`}
-              description={`Manabrew shows current rules and game information. Realistic shows the printed scan. Front/back face selection stays independent.`}
+              description={`Prawnstars shows current rules and game information. Realistic shows the printed scan. Front/back face selection stays independent.`}
             >
               <div className="flex flex-wrap gap-2">
                 {IN_GAME_CARD_PREVIEW_STYLE_OPTIONS.map((option) => (
@@ -1137,7 +1137,7 @@ export default function Settings() {
               })}
             </div>
             <p className="text-ui-meta text-muted-foreground">
-              Override individual Manabrew colors for the current app mode.
+              Override individual Prawnstars MTG colors for the current app mode.
             </p>
           </div>
 
@@ -1285,7 +1285,7 @@ export default function Settings() {
               })()}
             </div>
             <p className="text-ui-meta text-muted-foreground">
-              Generated from game theme keys. Defaults come from Manabrew.
+              Generated from game theme keys. Defaults come from the Prawnstars MTG theme.
             </p>
           </div>
         </section>

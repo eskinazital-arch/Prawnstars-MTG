@@ -86,6 +86,8 @@ pub struct ServerState {
     pub identity: IdentityVerifier,
     /// See `ServerConfig::direct_transport`. Fails closed.
     pub direct_transport: bool,
+    /// See `ServerConfig::guest_lobby_chat`. Off unless configured.
+    pub guest_lobby_chat: bool,
     /// See `ServerConfig::ice_servers`.
     pub ice_servers: Vec<crate::protocol::IceServer>,
     pub lobby_chat: Mutex<ChatHistory>,
@@ -113,12 +115,18 @@ impl ServerState {
             analytics,
             identity: IdentityVerifier::new(hub_jwks_url),
             direct_transport: false,
+            guest_lobby_chat: false,
             ice_servers: Vec::new(),
             lobby_chat: Mutex::new(ChatHistory::default()),
             seal,
             art_base_url: None,
             queue: Mutex::new(MatchQueue::default()),
         }
+    }
+
+    pub fn with_guest_lobby_chat(mut self, enabled: bool) -> Self {
+        self.guest_lobby_chat = enabled;
+        self
     }
 
     pub fn with_direct_transport(

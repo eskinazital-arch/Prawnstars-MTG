@@ -1,0 +1,409 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-25T00:00:00Z",
+  "title": "Design System: Prawnstars MTG",
+  "extensions": {
+    "colorMeta": {
+      "prawn-pink": {
+        "role": "primary",
+        "displayName": "Prawn Pink",
+        "canonical": "#FF5A7E",
+        "tonalRamp": [
+          "#3A0817",
+          "#66122A",
+          "#8A1736",
+          "#B01C43",
+          "#D62652",
+          "#FF5A7E",
+          "#FFB8C8",
+          "#FFF0F3"
+        ]
+      },
+      "prawn-pink-hover": {
+        "role": "primary",
+        "displayName": "Prawn Pink Hover",
+        "canonical": "#FF8FA8"
+      },
+      "prawn-pink-deep": {
+        "role": "primary",
+        "displayName": "Deep Prawn (light mode primary)",
+        "canonical": "#8A1736"
+      },
+      "prawn-pink-deeper": {
+        "role": "primary",
+        "displayName": "Deeper Prawn (light mode hover)",
+        "canonical": "#66122A"
+      },
+      "wrapper-violet": {
+        "role": "secondary",
+        "displayName": "Wrapper Violet",
+        "canonical": "#9B74FF",
+        "tonalRamp": [
+          "#1F1048",
+          "#351A7A",
+          "#431FA0",
+          "#5426C9",
+          "#6633F0",
+          "#9B74FF",
+          "#D0BFFF",
+          "#F4F0FF"
+        ]
+      },
+      "wrapper-violet-deep": {
+        "role": "secondary",
+        "displayName": "Deep Violet (light mode)",
+        "canonical": "#5426C9"
+      },
+      "selection-night": {
+        "role": "secondary",
+        "displayName": "Selection Night",
+        "canonical": "#1F1048"
+      },
+      "selection-ink": {
+        "role": "secondary",
+        "displayName": "Selection Ink",
+        "canonical": "#D0BFFF"
+      },
+      "wrapper-teal": {
+        "role": "tertiary",
+        "displayName": "Wrapper Teal",
+        "canonical": "#16C7B7",
+        "tonalRamp": ["#0B6E66", "#16C7B7", "#D6F7F3"]
+      },
+      "wrapper-teal-deep": {
+        "role": "tertiary",
+        "displayName": "Deep Teal (light mode)",
+        "canonical": "#0B6E66"
+      },
+      "teal-mist": { "role": "tertiary", "displayName": "Teal Mist", "canonical": "#D6F7F3" },
+      "plum-soot": {
+        "role": "neutral",
+        "displayName": "Plum Soot",
+        "canonical": "#1A1030",
+        "tonalRamp": [
+          "#1A1030",
+          "#24173F",
+          "#2F2152",
+          "#3D2C66",
+          "#6A5A8F",
+          "#7D6BA8",
+          "#C3B4E0",
+          "#FFF6EC"
+        ]
+      },
+      "plum-cauldron": {
+        "role": "neutral",
+        "displayName": "Plum Cauldron",
+        "canonical": "#24173F"
+      },
+      "plum-ash": { "role": "neutral", "displayName": "Plum Ash", "canonical": "#2F2152" },
+      "plum-seam": { "role": "neutral", "displayName": "Plum Seam", "canonical": "#3D2C66" },
+      "plum-input": { "role": "neutral", "displayName": "Plum Input", "canonical": "#7D6BA8" },
+      "dusk-pewter": { "role": "neutral", "displayName": "Dusk Pewter", "canonical": "#6A5A8F" },
+      "lilac-pewter": { "role": "neutral", "displayName": "Lilac Pewter", "canonical": "#C3B4E0" },
+      "steam-cream": { "role": "neutral", "displayName": "Steam Cream", "canonical": "#FFF6EC" },
+      "cream": {
+        "role": "neutral",
+        "displayName": "Cream",
+        "canonical": "#FFF3E6",
+        "tonalRamp": [
+          "#887765",
+          "#C7B9A8",
+          "#E6DACA",
+          "#FFF3E6",
+          "#FFF6EC",
+          "#FFF8F0",
+          "#FFFBF6",
+          "#FFFFFF"
+        ]
+      },
+      "linen": { "role": "neutral", "displayName": "Linen", "canonical": "#FFF8F0" },
+      "ivory": { "role": "neutral", "displayName": "Ivory", "canonical": "#FFFBF6" },
+      "oat": { "role": "neutral", "displayName": "Oat", "canonical": "#E6DACA" },
+      "oat-seam": { "role": "neutral", "displayName": "Oat Seam", "canonical": "#C7B9A8" },
+      "oat-input": { "role": "neutral", "displayName": "Oat Input", "canonical": "#887765" },
+      "destructive-night": {
+        "role": "status",
+        "displayName": "Destructive (dark)",
+        "canonical": "#F0788B"
+      },
+      "destructive-day": {
+        "role": "status",
+        "displayName": "Destructive (light)",
+        "canonical": "#A6283F"
+      },
+      "warning-night": {
+        "role": "status",
+        "displayName": "Warning (dark)",
+        "canonical": "#D8A640"
+      },
+      "warning-day": { "role": "status", "displayName": "Warning (light)", "canonical": "#735400" },
+      "logo-coral": { "role": "logo-only", "displayName": "Logo Coral", "canonical": "#FF8A5C" }
+    },
+    "reservedColors": [
+      {
+        "name": "sun-yellow",
+        "values": ["#FFD27A", "#FFB830", "#D99412"],
+        "purpose": "Reserved for your turn / active only. Defined in src/themes/brand.ts; not wired to any surface in the current build."
+      }
+    ],
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page greeting on the Play home." },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Wrapper tile titles and the lobby start strip title."
+      },
+      "title": { "displayName": "Title", "purpose": "Section headings on the Play home." },
+      "title-bar": { "displayName": "Title bar", "purpose": "Route name in the top bar." },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text; grows to 1rem on coarse pointers and 1.25rem on large touch screens."
+      },
+      "body-strong": {
+        "displayName": "Body strong",
+        "purpose": "Detail line under a wrapper title."
+      },
+      "label": { "displayName": "Label", "purpose": "Buttons, pills, chips, form labels." },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Secondary lines in list rows, in Lilac Pewter."
+      },
+      "rail-label": { "displayName": "Rail label", "purpose": "Words under the rail icons." },
+      "count": {
+        "displayName": "Count",
+        "purpose": "Tabular numerals for players online, seats and life."
+      }
+    },
+    "shadows": [
+      {
+        "name": "wrapper-lift",
+        "value": "0 10px 24px -14px rgb(0 0 0 / 0.7)",
+        "purpose": "Wrapper tiles and the lobby start strip."
+      },
+      {
+        "name": "logo-tile",
+        "value": "0 6px 14px -6px rgb(26 16 48 / 0.6)",
+        "purpose": "The plum tile holding the prawn mark on the rail."
+      },
+      {
+        "name": "dock-float",
+        "value": "0 8px 20px -10px rgb(0 0 0 / 0.6)",
+        "purpose": "The floating voice dock."
+      }
+    ],
+    "shapes": [
+      {
+        "name": "crimp-top",
+        "value": "mask: conic-gradient(from -45deg at bottom, #000 90deg, #0000 0) top / 14px 7px repeat-x, linear-gradient(#000 0 0) bottom / 100% calc(100% - 7px) no-repeat",
+        "purpose": "Zigzag seal along the top edge of a wrapper. Ways into play only."
+      }
+    ],
+    "lineWeights": [
+      { "name": "seam", "value": "1px", "purpose": "Borders, dividers, dashed empty states." },
+      {
+        "name": "ring",
+        "value": "2px",
+        "purpose": "Focus rings, speaking ring, outline pill on a wrapper."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1) 150ms",
+        "purpose": "Tailwind default for colour, transform and gap transitions on the new surfaces."
+      },
+      {
+        "name": "wrapper-hover-lift",
+        "value": "translateY(-4px)",
+        "purpose": "Wrapper tile hover, motion-safe only."
+      },
+      {
+        "name": "pill-arrow-reach",
+        "value": "gap 8px to 12px",
+        "purpose": "Action pill on a wrapper, on tile hover."
+      },
+      {
+        "name": "mark-tilt",
+        "value": "rotate(-6deg)",
+        "purpose": "Rail logo tile on hover, motion-safe only."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      {
+        "name": "md",
+        "value": "768px",
+        "purpose": "Rail appears with a fine pointer; wrapper row goes to two columns."
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "purpose": "Open tables and ready-made decks go side by side (1.2 / 1)."
+      },
+      { "name": "xl", "value": "1280px", "purpose": "Wrapper row becomes 1.4 / 1 / 1." }
+    ],
+    "scope": {
+      "newSystem": [
+        "App rail",
+        "Top bar and logo",
+        "Play home (wrapper tiles, seat dots, lists)",
+        "Lobby start strip",
+        "Group password gate",
+        "Voice and camera dock"
+      ],
+      "upstreamTokenSwapOnly": [
+        "Deck editor",
+        "Game board",
+        "Card rendering",
+        "Draft and sealed screens",
+        "Upstream Button component and dialogs"
+      ]
+    }
+  },
+  "components": [
+    {
+      "name": "Wrapper Tile",
+      "kind": "custom",
+      "refersTo": "wrapper-tile-pink",
+      "description": "A crimped booster-wrapper button, one bright colour per way into play.",
+      "html": "<button class='ds-wrapper'><svg class='ds-wrapper-icon' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M22 21v-2a4 4 0 0 0-3-3.87'/><path d='M16 3.13a4 4 0 0 1 0 7.75'/></svg><h2 class='ds-wrapper-title'>Play the pod</h2><p class='ds-wrapper-detail'>Prawnstars Pod (1) &#183; 0 of 4 seated</p><span class='ds-wrapper-pill'>Take a seat <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='m12 5 7 7-7 7'/></svg></span></button>",
+      "css": ".ds-wrapper { display: flex; flex-direction: column; align-items: flex-start; min-height: 192px; width: 100%; padding: 32px 24px 20px; border: none; border-radius: 6px 6px 16px 16px; background: #FF5A7E; color: #1A1030; text-align: left; cursor: pointer; box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.7); transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1); -webkit-mask: conic-gradient(from -45deg at bottom, #000 90deg, #0000 0) top / 14px 7px repeat-x, linear-gradient(#000 0 0) bottom / 100% calc(100% - 7px) no-repeat; mask: conic-gradient(from -45deg at bottom, #000 90deg, #0000 0) top / 14px 7px repeat-x, linear-gradient(#000 0 0) bottom / 100% calc(100% - 7px) no-repeat; } .ds-wrapper:hover { transform: translateY(-4px); } .ds-wrapper:focus-visible { outline: none; box-shadow: 0 0 0 2px #1A1030, 0 0 0 4px #FF5A7E; } .ds-wrapper-icon { width: 24px; height: 24px; opacity: 0.8; margin-bottom: 12px; } .ds-wrapper-title { margin: 0; font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif; font-size: 1.875rem; font-weight: 800; line-height: 1; letter-spacing: -0.01em; } .ds-wrapper-detail { margin: 8px 0 0; font-family: 'Figtree Variable', system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; } .ds-wrapper-pill { margin-top: 20px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 9999px; background: #1A1030; color: #FFF6EC; font-family: 'Figtree Variable', system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; transition: gap 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-wrapper:hover .ds-wrapper-pill { gap: 12px; }"
+    },
+    {
+      "name": "Wrapper Tile (teal)",
+      "kind": "custom",
+      "refersTo": "wrapper-tile-teal",
+      "description": "Practice vs AI wrapper.",
+      "html": "<button class='ds-wrapper-teal'><h2>Practice vs AI</h2><p>Any deck, any format</p><span>Start a game</span></button>",
+      "css": ".ds-wrapper-teal { display: flex; flex-direction: column; align-items: flex-start; min-height: 192px; width: 100%; padding: 32px 24px 20px; border: none; border-radius: 6px 6px 16px 16px; background: #16C7B7; color: #1A1030; text-align: left; cursor: pointer; box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.7); transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1); -webkit-mask: conic-gradient(from -45deg at bottom, #000 90deg, #0000 0) top / 14px 7px repeat-x, linear-gradient(#000 0 0) bottom / 100% calc(100% - 7px) no-repeat; mask: conic-gradient(from -45deg at bottom, #000 90deg, #0000 0) top / 14px 7px repeat-x, linear-gradient(#000 0 0) bottom / 100% calc(100% - 7px) no-repeat; } .ds-wrapper-teal:hover { transform: translateY(-4px); } .ds-wrapper-teal h2 { margin: 0; font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif; font-size: 1.875rem; font-weight: 800; line-height: 1; letter-spacing: -0.01em; } .ds-wrapper-teal p { margin: 8px 0 0; font-family: 'Figtree Variable', system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; } .ds-wrapper-teal span { margin-top: 20px; padding: 8px 16px; border-radius: 9999px; background: #1A1030; color: #FFF6EC; font-family: 'Figtree Variable', system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; }"
+    },
+    {
+      "name": "Primary Pill",
+      "kind": "button",
+      "refersTo": "pill-primary",
+      "description": "Primary action in the new system: Pick your name, Come in.",
+      "html": "<button class='ds-pill-primary'>Pick your name</button>",
+      "css": ".ds-pill-primary { padding: 6px 12px; border: none; border-radius: 9999px; background: #FF5A7E; color: #1A1030; font-family: 'Figtree Variable', system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; line-height: 1.4; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-pill-primary:hover { background: #FF8FA8; } .ds-pill-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #FF5A7E; }"
+    },
+    {
+      "name": "Play Pill",
+      "kind": "button",
+      "refersTo": "pill-play",
+      "description": "Starts a practice game from a ready-made deck.",
+      "html": "<button class='ds-pill-play'>Play</button>",
+      "css": ".ds-pill-play { padding: 6px 16px; border: none; border-radius: 9999px; background: #16C7B7; color: #1A1030; font-family: 'Figtree Variable', system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-pill-play:hover { opacity: 0.9; } .ds-pill-play:focus-visible { outline: none; box-shadow: 0 0 0 2px #FF5A7E; }"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "refersTo": "status-chip",
+      "description": "Playing-as and players-online chips.",
+      "html": "<span class='ds-chip'>2 online</span>",
+      "css": ".ds-chip { display: inline-block; padding: 6px 12px; border: 1px solid #3D2C66; border-radius: 9999px; background: #24173F; color: #FFF6EC; font-family: 'Figtree Variable', system-ui, sans-serif; font-size: 0.875rem; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Open Table Row with Seat Dots",
+      "kind": "card",
+      "refersTo": "list-row",
+      "description": "A clickable list row for an open table; seat dots show who is seated.",
+      "html": "<button class='ds-row'><span><b>Prawnstars Pod (1)</b><small>Any format &#183; click to take a seat</small></span><span class='ds-dots'><i class='on'></i><i></i><i></i><i></i></span></button>",
+      "css": ".ds-row { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 16px; border: 1px solid #3D2C66; border-radius: 12px; background: #24173F; color: #FFF6EC; text-align: left; cursor: pointer; font-family: 'Figtree Variable', system-ui, sans-serif; transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-row:hover { border-color: rgb(255 90 126 / 0.6); } .ds-row:focus-visible { outline: none; box-shadow: 0 0 0 2px #FF5A7E; } .ds-row b { display: block; font-weight: 600; } .ds-row small { font-size: 0.75rem; color: #C3B4E0; } .ds-dots { display: flex; gap: 4px; } .ds-dots i { width: 20px; height: 20px; border-radius: 9999px; border: 1px solid #3D2C66; background: #24173F; } .ds-dots i.on { border-color: #FF5A7E; background: #FF5A7E; }"
+    },
+    {
+      "name": "Password Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "The group password field on the gate.",
+      "html": "<input class='ds-input' type='password' placeholder='Group password'>",
+      "css": ".ds-input { height: 48px; width: 100%; padding: 0 16px; border: 1px solid #7D6BA8; border-radius: 12px; background: #24173F; color: #FFF6EC; font-family: 'Figtree Variable', system-ui, sans-serif; font-size: 0.875rem; } .ds-input::placeholder { color: #C3B4E0; } .ds-input:focus-visible { outline: none; box-shadow: 0 0 0 2px #FF5A7E; }"
+    },
+    {
+      "name": "Pink Rail",
+      "kind": "nav",
+      "refersTo": "rail",
+      "description": "Primary navigation on desktop-class screens.",
+      "html": "<nav class='ds-rail'><span class='ds-rail-logo'></span><button class='ds-rail-item is-active'><svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 10l9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/></svg>Play</button><button class='ds-rail-item'><svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='9' cy='7' r='4'/><path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/></svg>Multiplayer</button></nav>",
+      "css": ".ds-rail { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 88px; padding: 16px 0; background: #FF5A7E; color: #1A1030; } .ds-rail-logo { display: block; width: 56px; height: 56px; margin-bottom: 16px; border-radius: 16px; background: #1A1030; box-shadow: 0 6px 14px -6px rgb(26 16 48 / 0.6); transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-rail-logo:hover { transform: rotate(-6deg); } .ds-rail-item { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 68px; padding: 8px 4px; border: none; border-radius: 12px; background: transparent; color: #1A1030; font-family: 'Figtree Variable', system-ui, sans-serif; font-size: 0.6875rem; font-weight: 600; line-height: 1.25; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-rail-item:hover { background: rgb(26 16 48 / 0.15); } .ds-rail-item:focus-visible { outline: none; box-shadow: 0 0 0 2px #1A1030; } .ds-rail-item.is-active { background: #1A1030; color: #FFF6EC; } .ds-rail-item.is-active svg { color: #FF5A7E; }"
+    },
+    {
+      "name": "Voice Dock",
+      "kind": "custom",
+      "refersTo": "voice-dock",
+      "description": "Floating voice controls; the speaker gets a teal ring.",
+      "html": "<div class='ds-dock'><button class='ds-dock-btn'>Mute</button><span class='ds-speaker is-speaking'>You</span><span class='ds-speaker'>Sam</span></div>",
+      "css": ".ds-dock { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid #3D2C66; border-radius: 12px; background: #24173F; color: #FFF6EC; box-shadow: 0 8px 20px -10px rgb(0 0 0 / 0.6); font-family: 'Figtree Variable', system-ui, sans-serif; } .ds-dock-btn { min-height: 32px; padding: 4px 12px; border: 1px solid #7D6BA8; border-radius: 6px; background: #1A1030; color: #FFF6EC; font-size: 0.875rem; cursor: pointer; } .ds-dock-btn:hover { background: #2F2152; } .ds-speaker { padding: 2px 8px; border: 1px solid #3D2C66; border-radius: 9999px; font-size: 0.75rem; transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-speaker.is-speaking { border-color: #16C7B7; box-shadow: 0 0 0 2px rgb(22 199 183 / 0.6); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Freshly Cracked Booster Pack",
+    "overview": "Every way into the game is a wrapper in its own bright colour, crimped along the top like the foil seal of a pack, laid on a deep plum ground. The shell around the wrappers is quiet: cream ink on plum, one hot prawn-pink rail down the left edge, and thin seams instead of boxes. Once a game starts, the wrappers step away and the board stays a calm dark table, so the colour lives on the way in and never competes with card art. Density is moderate and desktop-first. The home screen is a short stack: a greeting, three wrapper tiles, then open tables beside ready-made decks, then the pod deck shelf. Type is chunky and friendly at display sizes (Bricolage Grotesque at extrabold) and plain and legible in the UI (Figtree). The world refuses the category default of a dark navy, gold-trimmed fantasy client. Scope of the new system: the app shell (rail, top bar, logo), the Play home, the lobby's crimped start strip, the group password gate, and the voice and camera dock. The deck editor, game board, card rendering, draft screens and most dialogs are incumbent upstream (Manabrew) layouts; they inherit this system only through the token swap in the theme files and keep their own component shapes.",
+    "keyCharacteristics": [
+      "Deep plum grounds with cream ink in dark mode (the default); cream grounds with plum ink in light mode.",
+      "One bright colour per way in: pink for the pod, teal for practice against the AI, violet for draft and sealed.",
+      "A crimped zigzag seam on the top edge of every wrapper.",
+      "Two line weights only: 1px seams and 2px rings.",
+      "Bricolage Grotesque extrabold for headings, Figtree for everything you read and click, tabular numerals for counts.",
+      "Low, soft plum shadows under wrappers; flat everywhere else."
+    ],
+    "rules": [
+      {
+        "name": "The One Colour, One Job Rule",
+        "body": "Each wrapper hue names one way in and keeps it everywhere: pink is the pod and the primary action, teal is practice and talk, violet is draft and selection. A new surface does not borrow a wrapper hue for an unrelated job.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sun Is Reserved Rule",
+        "body": "Sun yellow (#FFB830, with #FFD27A and #D99412) is defined in the brand scale for 'your turn / active' and nothing else. It is not wired to any surface yet; until it is, nothing else uses it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Calm Table Rule",
+        "body": "The game board keeps the Plum Soot ground. Wrapper fields stay on the way in and never become board backgrounds.",
+        "section": "colors"
+      },
+      {
+        "name": "The Extrabold Headline Rule",
+        "body": "Headings in the new system are Bricolage at 800 with slightly negative tracking (-0.01em to -0.015em). Body copy is never Bricolage.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Count Rule",
+        "body": "Player counts, seat counts and life totals use tabular numerals so the numbers don't jump as they change.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Seam Rule",
+        "body": "Lists, rows, chips and inputs use a 1px seam and a tonal step, not a shadow. A shadow means the piece is sitting on top of the page.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Two Weights Rule",
+        "body": "Lines come in two weights: 1px for seams, borders and dividers; 2px for focus rings, the speaking ring and the outline pill on a wrapper.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Crimp Means a Way In Rule",
+        "body": "The crimp appears only on wrappers that start play: the three Play home tiles and the lobby's start strip. Lists, dialogs and panels are not crimped.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do give every new way into play a wrapper: one hue from pink, teal or violet, the crimp on top, 6px top and 16px bottom corners, and the wrapper lift shadow.",
+      "Do set headings in Bricolage Grotesque at 800 and everything else in Figtree.",
+      "Do keep lines to 1px seams and 2px rings.",
+      "Do use tabular numerals for counts, seats and life.",
+      "Do put the action on a wrapper in a Plum Soot pill with a trailing arrow.",
+      "Do mark the speaker with a 2px Wrapper Teal ring.",
+      "Do gate hover lifts and gap changes behind the reduced-motion preference."
+    ],
+    "donts": [
+      "Don't use a wrapper hue for a job it doesn't already have (One Colour, One Job).",
+      "Don't use sun yellow for decoration; it is reserved for 'your turn / active'.",
+      "Don't crimp lists, dialogs or panels; the crimp means a way in.",
+      "Don't paint wrapper colours on the game board or behind card art.",
+      "Don't add coloured or glowing shadows to UI chrome; shadows are soft, low and dark.",
+      "Don't drift back to the dark navy, gold-trimmed fantasy-client look this world was built to refuse.",
+      "Don't use Logo Coral outside the prawn mark."
+    ]
+  }
+}

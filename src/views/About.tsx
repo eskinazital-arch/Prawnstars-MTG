@@ -7,7 +7,7 @@ export default function About() {
         <div className="w-full space-y-8 px-4 py-10 pb-10 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="mx-auto max-w-xl text-ui-body text-muted-foreground">
-              A fan-made, non-commercial client for Magic: The Gathering — free and open source.
+              The Prawnstars pod's private Magic table. Fan-made, non-commercial, and open source.
             </p>
           </div>
           <AboutContent />

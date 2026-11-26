@@ -12,14 +12,12 @@ export const featureFlags = {
   // in via Settings (`ironsmithRuntimeEnabled`) — the experimental engine ships
   // dark in prod by default.
   ironsmithRuntime: true,
-  deckHub: true,
-  // Hub accounts (OAuth + email sign-in, deck ownership). Desktop never uses the
-  // `WEB_APP_URL` redirect: an OAuth start with `client: "desktop"` ends on the
-  // hub's own code page and the app exchanges the pasted code at
-  // `/api/auth/exchange`, and the login email carries a code alongside its link.
-  accounts: true,
-  // Email sign-in inside the accounts dialog. Code entry, so desktop-safe.
-  emailSignIn: true,
+  // Prawnstars MTG is a private site for one friend group: no public community
+  // deck hub and no accounts (a shared group password gates the site instead;
+  // see PRODUCT.md). These stay off, and dev builds no longer force them on.
+  deckHub: false,
+  accounts: false,
+  emailSignIn: false,
   forgeWasm: false,
   cardFoil: true,
 } as const;
@@ -33,7 +31,7 @@ export function isFeatureEnabled(flag: FeatureFlag): boolean {
     import.meta.env.MODE !== "test" &&
     typeof window !== "undefined" &&
     !("__TAURI_INTERNALS__" in window);
-  if (browserDevelopment && (flag === "accounts" || flag === "deckHub" || flag === "forgeWasm")) {
+  if (browserDevelopment && flag === "forgeWasm") {
     return true;
   }
   return (

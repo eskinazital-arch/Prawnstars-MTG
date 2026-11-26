@@ -133,7 +133,9 @@ export async function importLimitedReview(text: string): Promise<LimitedSavedSes
     !["draft", "winston", "sealed"].includes(String(row.kind)) ||
     Object.keys(row).some((key) => !keys.includes(key))
   )
-    throw new Error("Import a version 1 Manabrew Limited review, not a private engine checkpoint.");
+    throw new Error(
+      "Import a version 1 Prawnstars MTG Limited review, not a private engine checkpoint.",
+    );
   if (
     !Number.isSafeInteger(row.seat) ||
     Number(row.seat) < 0 ||

@@ -703,6 +703,16 @@
     overscroll-behavior: none;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
+    caret-color: var(--primary);
+  }
+  /* Browser surfaces in the Prawnstars palette. */
+  ::selection {
+    background: var(--selection);
+    color: var(--selection-foreground);
+  }
+  /* Every scroll container, not just the page: the app scrolls inside panels. */
+  * {
+    scrollbar-color: var(--muted-foreground) transparent;
   }
   button,
   a,

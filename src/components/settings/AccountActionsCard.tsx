@@ -70,7 +70,7 @@ export function AccountActionsCard() {
           />
           <ActionRow
             title={`Sign out`}
-            description={`Sign out of Manabrew on this device.`}
+            description={`Sign out of Prawnstars MTG on this device.`}
             action={
               <Button
                 variant="outline"

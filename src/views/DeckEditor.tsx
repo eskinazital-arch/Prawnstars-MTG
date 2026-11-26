@@ -845,7 +845,7 @@ export default function DeckEditor() {
                                 )
                             : undefined
                         }
-                        badge="Official preset"
+                        badge="Ready-made"
                         engines={presetEnginesBySavedId.get(s.id)}
                       />
                     ))}

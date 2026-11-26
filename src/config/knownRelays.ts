@@ -1,3 +1,5 @@
+import { getGroupKey } from "@/lib/groupKey";
+
 export interface KnownRelay {
   name: string;
   host: string;
@@ -8,7 +10,7 @@ export interface KnownRelay {
 // The relay password is a shared access token, not a secret, so it lives in
 // plaintext here and is shown in the UI.
 const OFFICIAL_MANABREW: KnownRelay = {
-  name: "Official Manabrew",
+  name: "Public relay (upstream)",
   host: "relay.manabrew.app",
   port: 443,
   password: "725c5fba479c4e59605e39988e31cb76813afa55cd1e71488c4dd2aae998164b",
@@ -20,8 +22,20 @@ function makeRelay(host: string, port: unknown, password: unknown): KnownRelay {
     name: host,
     host,
     port: Number.isFinite(parsed) && parsed > 0 ? parsed : 9443,
-    password: typeof password === "string" && password ? password : "forge",
+    // A configured key wins; otherwise the group password this player entered.
+    password: typeof password === "string" && password ? password : (getGroupKey() ?? ""),
   };
+}
+
+/**
+ * True when the site's own relay publishes no key, so this player must enter
+ * the group password before they can play (see components/GroupPasswordGate).
+ */
+export function groupPasswordRequired(): boolean {
+  const runtime = typeof window !== "undefined" ? window.__MANABREW_RUNTIME__?.relay : undefined;
+  if (runtime?.host?.trim()) return !runtime.password;
+  if (import.meta.env.VITE_RELAY_HOST?.trim()) return !import.meta.env.VITE_RELAY_PASSWORD;
+  return false;
 }
 
 // The default relay, resolved in priority order:

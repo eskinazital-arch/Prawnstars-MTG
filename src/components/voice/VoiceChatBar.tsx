@@ -50,6 +50,7 @@ function SpeakerChip({
 export function VoiceChatBar() {
   const room = useServerStore((state) => state.currentRoom);
   const username = useServerStore((state) => state.username);
+  const inGame = useServerStore((state) => state.gameStarted);
   const available = useVoiceStore((state) => state.available);
   const joined = useVoiceStore((state) => state.joined);
   const joining = useVoiceStore((state) => state.joining);
@@ -102,12 +103,22 @@ export function VoiceChatBar() {
   }
 
   return (
-    <div className="fixed bottom-3 left-3 z-50 flex max-w-[calc(100vw-1.5rem)] flex-col items-start gap-2">
-      {!videoHidden && <VideoTiles tiles={tiles} />}
+    <div
+      className={cn(
+        "fixed z-50 flex max-w-[calc(100vw-1.5rem)] flex-col gap-2",
+        // It never sits on page content: in a game a slim strip at the top
+        // centre of the board; elsewhere inside the top bar, left of the sound
+        // and account buttons. Cameras hang below it either way.
+        inGame
+          ? "left-1/2 top-2 -translate-x-1/2 items-center"
+          : "right-28 top-[calc(var(--safe-area-inset-top)+0.625rem)] items-end",
+      )}
+    >
+      {!videoHidden && <div className="order-last">{<VideoTiles tiles={tiles} />}</div>}
       <div
         role="region"
         aria-label={`Voice chat`}
-        className="flex max-w-full flex-wrap items-center gap-2 rounded-xl border border-border/70 bg-background/90 px-3 py-2 shadow-xl backdrop-blur-md"
+        className="flex max-w-full flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 shadow-[0_8px_20px_-10px_rgb(0_0_0/0.6)]"
       >
         <Headphones className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
         {joined ? (

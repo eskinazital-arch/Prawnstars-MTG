@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppInitGate } from "@/components/AppInitGate";
 import { SignInDialog } from "@/components/auth/SignInDialog";
 import { VoiceChatBar } from "@/components/voice/VoiceChatBar";
+import { GroupPasswordGate } from "@/components/GroupPasswordGate";
 import { useApplyTheme, useThemePreviewMode } from "@/hooks/useTheme";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { useGameDevStore } from "@/stores/useGameDevStore";
@@ -90,12 +91,14 @@ function LocalizedApplication({ devToolsEnabled }: { devToolsEnabled: boolean })
       <ThemeApplicator>
         <TooltipProvider delayDuration={120} skipDelayDuration={300}>
           <PlatformRuntimeChecks />
-          <AppInitGate>
-            <RouterProvider router={router} />
-          </AppInitGate>
-          {isFeatureEnabled("accounts") && <SignInDialog />}
+          <GroupPasswordGate>
+            <AppInitGate>
+              <RouterProvider router={router} />
+            </AppInitGate>
+            {isFeatureEnabled("accounts") && <SignInDialog />}
+            <VoiceChatBar />
+          </GroupPasswordGate>
           <Toaster />
-          <VoiceChatBar />
           {import.meta.env.VITE_STAGING_TOOLS === "1" && <DebugLogOverlay />}
           {import.meta.env.DEV && devToolsEnabled && (
             <Suspense>

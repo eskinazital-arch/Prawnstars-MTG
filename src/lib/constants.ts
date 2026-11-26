@@ -25,6 +25,10 @@ export const GITHUB_REPO_URL = "https://github.com/witchesofthehill/manabrew";
 export const DISCORD_INVITE_URL = "https://discord.gg/NqrKpbhtcd";
 export const WEBSITE_URL = "https://manabrew.app";
 export const DOCS_URL = "https://docs.manabrew.app";
+/** Prawnstars MTG source (AGPL-3.0 requires it to stay available to users). */
+export const SOURCE_CODE_URL = "https://github.com/eskinazital-arch/Prawnstars-MTG";
+/** Player reports go to upstream Manabrew moderation; off for a private pod. */
+export const PLAYER_REPORTS_ENABLED: boolean = false;
 
 export const APP_VERSION = __APP_VERSION__;
 

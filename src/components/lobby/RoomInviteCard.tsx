@@ -1,6 +1,7 @@
 import { LockKeyhole, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EngineMark } from "@/components/lobby/EngineMark";
+import { engineLabel } from "@/components/lobby/engineLabel";
 import { PlayerAvatar } from "@/components/lobby/PlayerAvatar";
 import { getFormat } from "@/lib/formats";
 import { stripUsernameTag } from "@/lib/username";
@@ -66,7 +67,7 @@ export function RoomInviteCard({
             )}
             <span aria-hidden="true">·</span>
             <EngineMark engine={room.engine} className="h-3 w-3 shrink-0" />
-            <span>{room.engine}</span>
+            <span>{engineLabel(room.engine)}</span>
             <span aria-hidden="true">·</span>
             <Users aria-hidden="true" className="h-3 w-3 shrink-0" />
             <span>

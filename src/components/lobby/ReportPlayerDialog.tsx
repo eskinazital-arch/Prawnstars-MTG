@@ -105,8 +105,8 @@ export function ReportPlayerDialog({ player, onClose }: ReportPlayerDialogProps)
           </DialogTitle>
           <DialogDescription>Your report has been sent.</DialogDescription>
           <p className="text-ui-body text-foreground/90">
-            Your help is valuable in keeping Manabrew safe for everyone. A maintainer will look at
-            this promptly and take action where it is warranted.
+            Your help is valuable in keeping Prawnstars MTG safe for everyone. A maintainer will
+            look at this promptly and take action where it is warranted.
           </p>
           <p className="text-ui-body text-muted-foreground">
             You won&apos;t hear back about the outcome, but every report is read by a person.

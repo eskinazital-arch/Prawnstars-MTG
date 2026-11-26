@@ -68,7 +68,7 @@ function getRouteTitle(pathname: string, search: string): string | null {
     return `Preferences`;
   }
   if (pathname === ROUTES.ABOUT) {
-    return `About Manabrew`;
+    return `About Prawnstars MTG`;
   }
   if (pathname === ROUTES.DESIGN_SYSTEM) {
     return `Design System`;

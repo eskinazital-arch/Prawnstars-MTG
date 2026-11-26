@@ -237,7 +237,7 @@ export function CardGlintInspect({
           onClick={() => setOriginal((value) => !value)}
           aria-pressed={original}
         >
-          {original ? "Show Manabrew" : "Show Realistic"}
+          {original ? "Show Prawnstars" : "Show Realistic"}
         </button>
         {hasBack && (
           <button

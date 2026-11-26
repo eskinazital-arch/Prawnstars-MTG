@@ -151,8 +151,8 @@ export function PublishDeckDialog({
           </p>
         ) : (
           <p className="text-ui-body text-muted-foreground">
-            Publishing needs a Manabrew account, so the deck stays yours and you can remove it from
-            any device.
+            Publishing needs a Prawnstars MTG account, so the deck stays yours and you can remove it
+            from any device.
           </p>
         )}
         {signedIn && (

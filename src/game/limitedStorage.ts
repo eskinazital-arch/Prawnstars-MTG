@@ -38,7 +38,7 @@ function openDatabase(): Promise<IDBDatabase> {
       reject(new Error(`Limited saves could not be opened: ${request.error?.message}`));
     };
     request.onblocked = () =>
-      reject(new Error("Close other Manabrew tabs to update Limited saves."));
+      reject(new Error("Close other Prawnstars MTG tabs to update Limited saves."));
   });
   return database;
 }

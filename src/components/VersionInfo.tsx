@@ -29,7 +29,7 @@ export function VersionInfo() {
           <Tag className="size-4" />
         </span>
         <div className="leading-tight">
-          <span className="block text-ui-label font-semibold text-foreground">Manabrew</span>
+          <span className="block text-ui-label font-semibold text-foreground">Prawnstars MTG</span>
           <span className="block text-ui-caption text-muted-foreground">Version {APP_VERSION}</span>
         </div>
       </div>

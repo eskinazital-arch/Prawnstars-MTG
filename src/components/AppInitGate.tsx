@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useAppInitStore } from "@/stores/useAppInitStore";
 import { useIsShortScreen, useIsTouch } from "@/hooks/useBreakpoints";
-import { BreweryBackdrop } from "@/components/BreweryBackdrop";
 import { ManaBrewLogo } from "@/components/layout/ManaBrewLogo";
 import { cn } from "@/lib/utils";
 const BAR_FILL_MS = 200;
@@ -93,7 +92,7 @@ export function AppInitGate({ children }: { children: ReactNode }) {
       </p>
       <h1 className="max-w-full">
         <ManaBrewLogo decorative height={shortTouch ? 120 : 200} />
-        <span className="sr-only">Manabrew</span>
+        <span className="sr-only">Prawnstars MTG</span>
       </h1>
     </div>
   );
@@ -129,8 +128,6 @@ export function AppInitGate({ children }: { children: ReactNode }) {
             : undefined
         }
       >
-        <BreweryBackdrop />
-
         <div className="absolute inset-0 z-10 overflow-y-auto">
           <div
             className={cn(

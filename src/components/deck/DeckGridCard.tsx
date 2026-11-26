@@ -14,6 +14,7 @@ import { DeckCoverImage } from "@/components/deck/deckCover";
 import { resolveCoverCard } from "@/components/deck/deckCover.utils";
 import { getDeckColorCost, getDeckNameColorClass } from "@/components/deck/deckDisplay.utils";
 import { DeckLabelBadge } from "@/components/deck/DeckLabelBadge";
+import { engineLabel } from "@/components/lobby/engineLabel";
 import { FormatBadge } from "@/components/game/FormatBadge";
 import { ManaSymbols } from "@/components/game/ManaSymbols";
 import { Button } from "@/components/ui/button";
@@ -158,7 +159,7 @@ export function DeckGridCard({
                 key={engine}
                 className="rounded-full border border-border/70 bg-background/80 px-1.5 py-0.5 text-ui-meta font-medium text-foreground backdrop-blur-sm"
               >
-                {engine} engine
+                {engineLabel(engine)} engine
               </span>
             ))}
             <span className="ml-auto text-ui-meta text-text-on-tinted/85">

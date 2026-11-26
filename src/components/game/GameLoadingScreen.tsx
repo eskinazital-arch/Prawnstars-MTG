@@ -14,7 +14,7 @@ const STEPS = [
   `Take your seat`,
   `Receive the first game state`,
   `Load card images`,
-  `Render Manabrew cards`,
+  `Render Prawnstars cards`,
 ];
 const LOAD_CARD_IMAGES_STEP = 3;
 const RENDER_CARDS_STEP = 4;

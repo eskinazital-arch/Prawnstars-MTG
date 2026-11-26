@@ -101,7 +101,7 @@ const STEPS = [
   },
   {
     title: `Check engine support`,
-    description: `Validation checks legality and whether every card is supported by both the Manabrew and Forge engines. Warning markers identify unsupported cards and can be filtered or selected together.`,
+    description: `Validation checks legality and whether every card is supported by both the Rust and Forge engines. Warning markers identify unsupported cards and can be filtered or selected together.`,
     icon: ShieldCheck,
     tips: [
       "Collection gaps do not affect online deck legality",

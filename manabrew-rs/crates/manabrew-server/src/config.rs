@@ -57,6 +57,9 @@ pub struct ServerConfig {
     pub hub_jwks_url: Option<String>,
     /// Opt-in. Off, the relay never sends a roster.
     pub direct_transport: bool,
+    /// Opt-in. Lets players without an account post in lobby chat. For a
+    /// private relay whose server key already limits who can connect.
+    pub guest_lobby_chat: bool,
     /// ICE servers handed to the browser plane. See [`parse_ice_servers`].
     pub ice_servers: Vec<TransportIceServer>,
     /// Where this relay keeps card art. Set it and the relay serves
@@ -129,6 +132,8 @@ impl ServerConfig {
                 .ok()
                 .filter(|url| !url.is_empty()),
             direct_transport: std::env::var("MANABREW_DIRECT_TRANSPORT")
+                .is_ok_and(|v| v == "1" || v.eq_ignore_ascii_case("true")),
+            guest_lobby_chat: std::env::var("MANABREW_GUEST_LOBBY_CHAT")
                 .is_ok_and(|v| v == "1" || v.eq_ignore_ascii_case("true")),
             ice_servers: std::env::var("MANABREW_ICE_SERVERS")
                 .ok()

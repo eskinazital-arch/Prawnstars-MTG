@@ -1,7 +1,20 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { reserveGuestName } from "@/lib/guestName";
 import { loadPodDecks, podDeckKey, type PodDeck } from "@/lib/podDecks";
 import { useDeckStore } from "@/stores/useDeckStore";
+import { usePreferencesStore } from "@/stores/usePreferencesStore";
+
+/**
+ * The pod name doubles as this player's name on the relay, so seats, the
+ * player list and chat show "Tal" rather than a generated handle.
+ */
+function applyRelayName(owner: string): void {
+  if (usePreferencesStore.getState().serverUsername === owner) return;
+  void reserveGuestName(owner).catch((err) => {
+    console.warn("[PodDecks] could not use the pod name on the relay:", err);
+  });
+}
 
 /** Which saved deck in My Decks is this player's copy of a pod deck. */
 interface PodDeckLink {
@@ -51,6 +64,7 @@ export const usePodDecksStore = create<PodDecksState>()(
       setMe: (owner) => {
         set({ me: owner });
         get().syncMine();
+        if (owner) applyRelayName(owner);
       },
       addToMyDecks: (deck) => {
         const key = podDeckKey(deck);
@@ -87,6 +101,8 @@ export const usePodDecksStore = create<PodDecksState>()(
 
 /** Loads the pod shelf and keeps this player's decks synced once My Decks is ready. */
 export function startPodDeckSync(): () => void {
+  const me = usePodDecksStore.getState().me;
+  if (me) applyRelayName(me);
   void usePodDecksStore.getState().prefetch();
   usePodDecksStore.getState().syncMine();
   return useDeckStore.persist.onFinishHydration(() => usePodDecksStore.getState().syncMine());

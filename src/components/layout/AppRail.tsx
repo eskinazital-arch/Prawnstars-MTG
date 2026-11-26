@@ -1,4 +1,4 @@
-import { HeartPulse, House, Layers, Search, Swords, Users } from "lucide-react";
+import { HeartPulse, House, Layers, PackageOpen, Search, Swords, Users } from "lucide-react";
 import type { ComponentType } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/lib/constants";
@@ -16,10 +16,26 @@ const RAIL_ITEMS: RailItem[] = [
   { to: ROUTES.PLAY, label: `Play`, icon: House },
   { to: ROUTES.LOBBY, label: `Multiplayer`, icon: Users },
   { to: ROUTES.PLAY_OFFLINE_CONSTRUCTED, label: `Practice`, icon: Swords },
+  { to: ROUTES.PLAY_OFFLINE_LIMITED, label: `Draft`, icon: PackageOpen },
   { to: ROUTES.DECK_EDITOR, label: `Decks`, icon: Layers },
   { to: ROUTES.SEARCH, label: `Cards`, icon: Search },
   { to: ROUTES.COMPANION, label: `Life`, icon: HeartPulse },
 ];
+
+function isLimitedPath(pathname: string): boolean {
+  return (
+    pathname.startsWith(ROUTES.PLAY_OFFLINE_LIMITED) ||
+    pathname.startsWith(ROUTES.DRAFT) ||
+    pathname.startsWith(ROUTES.SEALED) ||
+    pathname.startsWith(ROUTES.WINSTON)
+  );
+}
+
+function isRailItemActive(to: string, pathname: string): boolean {
+  if (to === ROUTES.PLAY_OFFLINE_LIMITED) return isLimitedPath(pathname);
+  if (to === ROUTES.PLAY_OFFLINE_CONSTRUCTED && isLimitedPath(pathname)) return false;
+  return isNavDestinationActive(to, pathname);
+}
 
 /** The pink rail: the app's primary navigation on desktop-class screens. */
 export function AppRail({ disabled = false }: { disabled?: boolean }) {
@@ -40,7 +56,7 @@ export function AppRail({ disabled = false }: { disabled?: boolean }) {
         <PrawnMark size={42} />
       </button>
       {RAIL_ITEMS.map(({ to, label, icon: Icon }) => {
-        const active = isNavDestinationActive(to, location.pathname);
+        const active = isRailItemActive(to, location.pathname);
         return (
           <button
             key={to}

@@ -11,6 +11,7 @@ import { QualificationBadge } from "@/components/lobby/QualificationBadge";
 import { ReportPlayerDialog } from "@/components/lobby/ReportPlayerDialog";
 import { useServerStore } from "@/stores/useServerStore";
 import { useHubAvailable } from "@/hooks/useHubAvailable";
+import { PLAYER_REPORTS_ENABLED } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { stripUsernameTag } from "@/lib/username";
 import type { PlayerInfo } from "@/types/server";
@@ -29,7 +30,9 @@ export function PlayerCard({ player, status, action, side = "left", children }: 
   const tag = player.username.slice(name.length);
   const qualification = player.qualification ? QUALIFICATION_LABEL[player.qualification] : null;
   const isMe = useServerStore((s) => s.username) === player.username;
-  const canReport = useHubAvailable() && !isMe && player.qualification !== "maintainer";
+  const hubAvailable = useHubAvailable();
+  const canReport =
+    PLAYER_REPORTS_ENABLED && hubAvailable && !isMe && player.qualification !== "maintainer";
   const [reporting, setReporting] = useState(false);
   return (
     <>

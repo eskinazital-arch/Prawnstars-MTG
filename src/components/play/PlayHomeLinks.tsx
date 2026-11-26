@@ -1,26 +1,9 @@
-import {
-  Github,
-  Globe,
-  HeartPulse,
-  Info,
-  PackageOpen,
-  Palette,
-  Search,
-  Settings,
-} from "lucide-react";
+import { HeartPulse, Info, PackageOpen, Palette, Search, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
-import { DiscordIcon } from "@/components/icons/DiscordIcon";
 import { FeatureTile } from "@/components/play/FeatureTile";
-import { Button } from "@/components/ui/button";
 import { DESIGN_SYSTEM_ENABLED } from "@/config/designSystem";
 import { isFeatureEnabled } from "@/featureFlags";
-import {
-  APP_VERSION,
-  DISCORD_INVITE_URL,
-  GITHUB_REPO_URL,
-  ROUTES,
-  WEBSITE_URL,
-} from "@/lib/constants";
+import { APP_VERSION, ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/useAuthStore";
 const TOOL_GRID_BY_COUNT: Record<number, string> = {
@@ -100,7 +83,7 @@ export function PlayHomeLinks() {
           <li>
             <Link to={ROUTES.ABOUT} className={UTILITY_ROW_CLASS}>
               <Info className="h-4 w-4 shrink-0 text-muted-foreground" />
-              About Manabrew
+              About Prawnstars MTG
             </Link>
           </li>
           {DESIGN_SYSTEM_ENABLED && (
@@ -116,27 +99,9 @@ export function PlayHomeLinks() {
 
       <footer className="flex flex-col gap-3 border-t border-border/50 pt-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-ui-caption text-muted-foreground">Manabrew v{APP_VERSION}</span>
-          <div className="flex items-center gap-1">
-            <Button asChild variant="ghost" size="icon-sm" title={`Discord`}>
-              <a href={DISCORD_INVITE_URL} target="_blank" rel="noreferrer">
-                <DiscordIcon className="h-4 w-4" />
-                <span className="sr-only">Discord</span>
-              </a>
-            </Button>
-            <Button asChild variant="ghost" size="icon-sm" title={`GitHub`}>
-              <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer">
-                <Github className="h-4 w-4" />
-                <span className="sr-only">GitHub</span>
-              </a>
-            </Button>
-            <Button asChild variant="ghost" size="icon-sm" title={`Website`}>
-              <a href={WEBSITE_URL} target="_blank" rel="noreferrer">
-                <Globe className="h-4 w-4" />
-                <span className="sr-only">Website</span>
-              </a>
-            </Button>
-          </div>
+          <span className="text-ui-caption text-muted-foreground">
+            Prawnstars MTG v{APP_VERSION}
+          </span>
         </div>
       </footer>
     </>

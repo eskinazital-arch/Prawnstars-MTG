@@ -22,13 +22,13 @@ export function PresetDeckShelf({
 }: PresetDeckShelfProps) {
   return (
     <CollapsibleDeckShelf
-      title={`Preset decks`}
+      title={`Ready-made decks`}
       count={loaded ? decks.length : "Loading…"}
       open={open}
       onOpenChange={onOpenChange}
     >
       {decks.length > 0 ? (
-        <DeckShelfRow label={`Preset decks`}>
+        <DeckShelfRow label={`Ready-made decks`}>
           {decks.map((preset) => {
             const presetId = preset.id ?? preset.name;
             return (
@@ -37,7 +37,7 @@ export function PresetDeckShelf({
                   deck={{ id: presetId, deck: preset, savedAt: 0 }}
                   onOpen={() => onOpenDeck(preset)}
                   onPlay={() => onPlayDeck(preset)}
-                  badge="Official preset"
+                  badge="Ready-made"
                   engines={preset.engines}
                   playing={pendingDeckId === presetId}
                   playDisabled={pendingDeckId !== null}

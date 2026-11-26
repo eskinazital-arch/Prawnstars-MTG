@@ -885,7 +885,8 @@ export class IronsmithTrustedGameApi implements IGameApi {
         if (!this.versionMismatchReported) {
           this.versionMismatchReported = true;
           getPlatform().events.emit("game:fatal", {
-            message: "Every player needs the same Manabrew version to play an Ironsmith game.",
+            message:
+              "Every player needs the same Prawnstars MTG version to play an Ironsmith game.",
           });
         }
         return;

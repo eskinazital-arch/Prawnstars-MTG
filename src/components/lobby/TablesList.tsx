@@ -203,19 +203,14 @@ export function TablesList({
             <div>
               <h2
                 className={cn(
-                  "font-serif text-3xl font-semibold sm:text-4xl",
+                  "font-serif text-3xl font-extrabold tracking-[-0.015em] sm:text-4xl",
                   shortTouch && "text-2xl sm:text-2xl",
                 )}
               >
-                Tables from other players
+                Pod tables
               </h2>
-              <p
-                className={cn(
-                  "ml-2 mt-2 text-ui-meta text-muted-foreground",
-                  shortTouch && "hidden",
-                )}
-              >
-                Join an open table or watch a game in progress.
+              <p className={cn("mt-2 text-ui-meta text-muted-foreground", shortTouch && "hidden")}>
+                Take a seat at an open table, or watch a game in progress.
               </p>
             </div>
 

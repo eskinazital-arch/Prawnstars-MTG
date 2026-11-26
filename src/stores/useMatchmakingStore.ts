@@ -174,7 +174,7 @@ function listen(set: (partial: Partial<MatchmakingState>) => void, get: () => Ma
       });
       notifyMatch(
         "Your Commander table is ready",
-        `Bracket ${payload.bracket} · ${tableLabel(payload.pod_size)}${localGameActive() ? ". Return to Manabrew to join." : ""}`,
+        `Bracket ${payload.bracket} · ${tableLabel(payload.pod_size)}${localGameActive() ? ". Return to Prawnstars MTG to join." : ""}`,
         payload.expires_s,
       );
     }),

@@ -53,7 +53,7 @@ const MANABREW_THEME: {
   gameColors: GameThemeColorMap;
   gameFontSizes: GameFontSizes;
 } = {
-  name: "Manabrew",
+  name: "Prawnstars",
   light: {
     background: neutral.cream,
     foreground: neutral.soot,

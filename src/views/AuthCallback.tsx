@@ -11,7 +11,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   state_expired: `The sign-in attempt expired. Try again.`,
   oauth_denied: `Sign-in was cancelled.`,
   oauth_failed: `Sign-in failed. Try again.`,
-  identity_taken: `That account is already linked to a different Manabrew account.`,
+  identity_taken: `That account is already linked to a different Prawnstars MTG account.`,
   link_expired: `The sign-in link expired. Request a new code.`,
 };
 const PROVIDER_LABELS: Record<string, string> = {

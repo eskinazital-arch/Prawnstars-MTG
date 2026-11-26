@@ -1,6 +1,5 @@
 import type { ComponentType } from "react";
 import {
-  Github,
   HeartPulse,
   Info,
   Layers,
@@ -11,10 +10,9 @@ import {
   Swords,
   Users,
 } from "lucide-react";
-import { DiscordIcon } from "@/components/icons/DiscordIcon";
 import { DESIGN_SYSTEM_ENABLED } from "@/config/designSystem";
 import { isFeatureEnabled } from "@/featureFlags";
-import { DISCORD_INVITE_URL, GITHUB_REPO_URL, ROUTES } from "@/lib/constants";
+import { ROUTES } from "@/lib/constants";
 export interface NavDestination {
   to: string;
   label: string;
@@ -73,19 +71,5 @@ export function getMoreDestinations(): NavDestination[] {
   if (DESIGN_SYSTEM_ENABLED) {
     more.push({ to: ROUTES.DESIGN_SYSTEM, label: `Design System`, icon: Palette });
   }
-  more.push(
-    {
-      to: DISCORD_INVITE_URL,
-      label: `Discord`,
-      icon: DiscordIcon,
-      external: true,
-    },
-    {
-      to: GITHUB_REPO_URL,
-      label: `GitHub`,
-      icon: Github,
-      external: true,
-    },
-  );
   return more;
 }

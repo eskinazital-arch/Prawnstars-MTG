@@ -662,7 +662,7 @@ fn send_chat(
             .players
             .get_mut(player_id)
             .ok_or(ServerError::NotInRoom)?;
-        if scope == ChatScope::Lobby && !player.verified() {
+        if scope == ChatScope::Lobby && !player.verified() && !state.guest_lobby_chat {
             return Err(ServerError::AccountRequired);
         }
         let now = Instant::now();

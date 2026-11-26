@@ -2,6 +2,7 @@ import { Eye, BadgeCheck, LockKeyhole, UserRoundPlus, Users } from "lucide-react
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EngineMark } from "@/components/lobby/EngineMark";
+import { engineLabel } from "@/components/lobby/engineLabel";
 import { OpenTableSeats } from "@/components/lobby/OpenTableSeats";
 import { getFormat } from "@/lib/formats";
 import { stripUsernameTag } from "@/lib/username";
@@ -80,7 +81,7 @@ export function OpenTableCard({ room, currentRoomId, joining, onJoin }: OpenTabl
           <span className="flex flex-col items-center gap-0.5">
             <span className="flex items-center gap-1 text-ui-meta font-semibold text-foreground/85">
               <EngineMark engine={room.engine} className="h-3 w-3" />
-              {room.engine}
+              {engineLabel(room.engine)}
             </span>
             <span className="max-w-40 break-words text-ui-meta text-muted-foreground">
               {limitedLabel ?? modeLabel}

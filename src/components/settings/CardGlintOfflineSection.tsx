@@ -77,9 +77,10 @@ export function CardGlintOfflineSection() {
         </p>
       )}
       <p className="text-ui-body text-muted-foreground">
-        Frames and proprietary fonts are not bundled with Manabrew. Card Conjurer's service terms
-        are personal and noncommercial, not a blanket asset redistribution license. Some source
-        collections provide no asset license. Only download materials you have permission to use.
+        Frames and proprietary fonts are not bundled with Prawnstars MTG. Card Conjurer's service
+        terms are personal and noncommercial, not a blanket asset redistribution license. Some
+        source collections provide no asset license. Only download materials you have permission to
+        use.
         {""}
         <a
           className="touch:inline-flex touch:min-h-11 touch:items-center underline"

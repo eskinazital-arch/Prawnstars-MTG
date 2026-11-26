@@ -363,10 +363,9 @@ const deckStorage = createJSONStorage(() => ({
     try {
       localStorage.setItem(name, value);
     } catch {
-      toast.error(
-        `Seems like you reached the limit of your browser storage \u2014 contact us on Discord for more info.`,
-        { id: "deck-storage-full" },
-      );
+      toast.error(`Seems like you reached the limit of your browser storage.`, {
+        id: "deck-storage-full",
+      });
     }
   },
   removeItem: (name) => localStorage.removeItem(name),

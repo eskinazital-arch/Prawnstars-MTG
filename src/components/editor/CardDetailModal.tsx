@@ -514,7 +514,7 @@ function CardDetailContent({
                   className="touch:min-w-11 touch:min-h-11 mt-2 w-full"
                   onClick={() => setPresentation(generated ? "printed" : "rules")}
                 >
-                  {generated ? "Show Realistic card" : "Show Manabrew card"}
+                  {generated ? "Show Realistic card" : "Show Prawnstars card"}
                 </Button>
 
                 {isDoubleFaced && (
@@ -588,8 +588,8 @@ function CardDetailContent({
                       )}
                       <span>
                         {unsupported
-                          ? `Unsupported by the Manabrew and Forge engines`
-                          : `Supported by the Manabrew and Forge engines`}
+                          ? `Unsupported by the Rust and Forge engines`
+                          : `Supported by the Rust and Forge engines`}
                       </span>
                     </div>
                     {!readOnly && appliedTags.length > 0 && (

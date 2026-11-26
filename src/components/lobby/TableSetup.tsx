@@ -75,7 +75,7 @@ export function TableSetup({ username, onClose, onCreatingChange }: TableSetupPr
   const onNode = engine === "Forge" && hostedNode;
   const splashLabel = onNode ? `Finding you a table\u2026` : `Setting the table\u2026`;
   const openTableHint = onNode
-    ? `A Manabrew node hosts this table, under its own name. Anyone in the lobby can take a seat.`
+    ? `A Prawnstars MTG node hosts this table, under its own name. Anyone in the lobby can take a seat.`
     : roomPassword.trim()
       ? `People with the password can join.`
       : `Anyone in the lobby can take a seat.`;

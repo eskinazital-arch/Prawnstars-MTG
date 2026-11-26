@@ -1,7 +1,6 @@
-import { Armchair, Loader2, Plus, Search } from "lucide-react";
+import { Loader2, Plus, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { OpenTableSeats } from "@/components/lobby/OpenTableSeats";
 import { Button } from "@/components/ui/button";
 import { useIsShortScreen, useIsTouch } from "@/hooks/useBreakpoints";
 import { tableLabel, useMatchmakingStore } from "@/stores/useMatchmakingStore";
@@ -81,36 +80,54 @@ export function MultiplayerStartPanel({
       </section>
     );
   }
+  const pill =
+    "inline-flex min-h-10 items-center gap-2 rounded-full px-4 text-ui-label font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background disabled:opacity-60 [&_svg]:h-4 [&_svg]:w-4";
+  // The lobby's way in, in the same crimped wrapper language as the Play home.
   return (
-    <OpenTableSeats
-      players={[]}
-      maxPlayers={4}
-      size="room"
-      ornamental
-      className="mx-auto w-full max-w-xl aspect-[4/3] sm:max-w-4xl sm:aspect-[35/16]"
-      centerContent={
-        <div className="flex flex-col items-center gap-4 sm:mr-4 sm:flex-row sm:gap-4">
-          {searching ? (
-            <Loader2 className="hidden text-foreground animate-spin motion-reduce:animate-none sm:block sm:h-12 sm:w-12" />
-          ) : (
-            <Armchair className="hidden text-foreground sm:mt-2 sm:block sm:h-24 sm:w-24" />
-          )}
-          <div
-            className={cn(
-              "flex flex-col items-center gap-3 sm:ml-4 sm:items-start",
-              searching && "sm:w-80",
-            )}
+    <section className="crimp-top flex flex-wrap items-center justify-between gap-5 rounded-b-2xl rounded-t-md bg-primary px-6 pb-5 pt-8 text-primary-foreground shadow-[0_10px_24px_-14px_rgb(0_0_0/0.7)]">
+      <div className="min-w-0">
+        <h2 className="flex items-center gap-2 font-serif text-3xl font-extrabold leading-none tracking-[-0.01em]">
+          {searching && <Loader2 className="h-6 w-6 animate-spin motion-reduce:animate-none" />}
+          {title}
+        </h2>
+        <p className="mt-2 text-ui-body font-semibold">
+          {detail ?? "Open a table for the pod, or let the server find you a game."}
+        </p>
+      </div>
+      {searching ? (
+        <button
+          type="button"
+          className={cn(pill, "bg-background text-foreground hover:bg-card")}
+          onClick={() =>
+            void leave().catch((error: unknown) =>
+              toast.error(error instanceof Error ? error.message : "Could not cancel the search."),
+            )
+          }
+        >
+          Cancel search
+        </button>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className={cn(pill, "bg-background text-foreground hover:bg-card")}
+            onClick={onSetUp}
+            disabled={disabled}
           >
-            <div className="flex flex-col items-center gap-1 sm:items-start">
-              <h2 className="font-serif text-xl font-semibold leading-tight sm:text-4xl">
-                {title}
-              </h2>
-              {detail && <p className="text-ui-body text-muted-foreground">{detail}</p>}
-            </div>
-            {actions}
-          </div>
+            <Plus /> Create a table
+          </button>
+          {onFindGame && (
+            <button
+              type="button"
+              className={cn(pill, "border-2 border-background/70 hover:bg-background/15")}
+              onClick={onFindGame}
+              disabled={disabled}
+            >
+              <Search /> Find a game
+            </button>
+          )}
         </div>
-      }
-    />
+      )}
+    </section>
   );
 }

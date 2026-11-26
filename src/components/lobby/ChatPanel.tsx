@@ -10,7 +10,9 @@ import { useServerStore } from "@/stores/useServerStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useSignInDialog } from "@/stores/useSignInDialogStore";
 import { useHubAvailable } from "@/hooks/useHubAvailable";
+import { isFeatureEnabled } from "@/featureFlags";
 import { CHAT_MESSAGE_MAX_CHARS, type ChatScope, type RoomInfo } from "@/types/server";
+import { PLAYER_REPORTS_ENABLED } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 interface ChatPanelProps {
   currentRoom: RoomInfo | null;
@@ -49,7 +51,9 @@ export function ChatPanel({
     setScope(inRoom ? "Room" : "Lobby");
   }
   const entries: ChatEntry[] = scope === "Room" ? room : lobby;
-  const locked = scope === "Lobby" && !signedIn;
+  // Without accounts (the private Prawnstars relay sets MANABREW_GUEST_LOBBY_CHAT)
+  // everyone who got past the group password may chat in the lobby.
+  const locked = scope === "Lobby" && !signedIn && isFeatureEnabled("accounts");
   useEffect(() => {
     setActiveScope(scope);
     return () => setActiveScope(null);
@@ -120,7 +124,9 @@ export function ChatPanel({
                 mine={entry.from === currentUsername}
                 player={players.find((p) => p.username === entry.from)}
                 onReport={
-                  hubAvailable ? (target) => setReportTarget({ username: target.from }) : undefined
+                  PLAYER_REPORTS_ENABLED && hubAvailable
+                    ? (target) => setReportTarget({ username: target.from })
+                    : undefined
                 }
                 continued={
                   previous != null &&

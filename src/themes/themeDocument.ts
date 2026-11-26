@@ -49,11 +49,11 @@ export function parseThemeDocument(input: unknown): ThemeDocument {
   }
   if (document.version === 1 && document.presetId !== "default") {
     throw new Error(
-      "This theme uses a removed base preset and cannot be imported. Only version 1 themes based on Manabrew are supported.",
+      "This theme uses a removed base preset and cannot be imported. Only version 1 themes based on the default theme are supported.",
     );
   }
   if (document.version === 2 && (document.base !== "manabrew" || "presetId" in document)) {
-    throw new Error("Version 2 themes must use the Manabrew base without a preset selection.");
+    throw new Error("Version 2 themes must use the default base without a preset selection.");
   }
   if (typeof document.name !== "string" || !document.name.trim() || document.name.length > 80) {
     throw new Error("Theme name must contain 1 to 80 characters.");

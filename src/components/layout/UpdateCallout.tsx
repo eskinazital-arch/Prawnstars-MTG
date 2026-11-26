@@ -18,7 +18,7 @@ export function UpdateCallout() {
         <div className="min-w-0 flex-1">
           <p className="text-ui-label font-semibold">Update available</p>
           <p className="text-ui-meta text-muted-foreground">
-            Manabrew {version} is ready to install.
+            Prawnstars MTG {version} is ready to install.
           </p>
         </div>
         <Button
