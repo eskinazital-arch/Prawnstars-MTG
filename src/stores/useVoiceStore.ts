@@ -5,6 +5,8 @@ import { onVoiceAvailabilityChange, voiceSignallingAvailable } from "@/lib/voice
 export interface VoicePeerView {
   state: VoicePeerState;
   speaking: boolean;
+  /** Their camera is on (they said so over the `cam` signal). */
+  camera: boolean;
 }
 
 interface VoiceState {
@@ -16,11 +18,24 @@ interface VoiceState {
   selfSpeaking: boolean;
   peers: Record<string, VoicePeerView>;
   error: string | null;
+  cameraOn: boolean;
+  cameraStarting: boolean;
+  /** This player's own camera track, for the self preview tile. */
+  localVideo: MediaStreamTrack | null;
+  /** Incoming camera tracks by username. */
+  remoteVideo: Record<string, MediaStreamTrack>;
   join: (me: string, members: string[]) => Promise<void>;
   leave: () => void;
   toggleMute: () => void;
+  toggleCamera: () => Promise<void>;
   setMembers: (members: string[]) => void;
 }
+
+const CAMERA_CONSTRAINTS: MediaTrackConstraints = {
+  width: { ideal: 320 },
+  height: { ideal: 240 },
+  frameRate: { ideal: 15, max: 20 },
+};
 
 // Live media objects stay outside the store: they are not state to render.
 let mesh: VoiceMesh | null = null;
@@ -46,7 +61,11 @@ export const useVoiceStore = create<VoiceState>((set, get) => {
       const peers = { ...state.peers };
       if (patch === null) delete peers[name];
       else {
-        const current = peers[name] ?? { state: "connecting", speaking: false };
+        const current: VoicePeerView = peers[name] ?? {
+          state: "connecting",
+          speaking: false,
+          camera: false,
+        };
         peers[name] = { ...current, ...patch };
       }
       return { peers };
@@ -68,6 +87,20 @@ export const useVoiceStore = create<VoiceState>((set, get) => {
     );
   };
 
+  const setRemoteVideo = (name: string, track: MediaStreamTrack | null) =>
+    set((state) => {
+      const remoteVideo = { ...state.remoteVideo };
+      if (track) remoteVideo[name] = track;
+      else delete remoteVideo[name];
+      return { remoteVideo };
+    });
+
+  const stopCamera = () => {
+    get().localVideo?.stop();
+    mesh?.setVideoTrack(null);
+    set({ cameraOn: false, cameraStarting: false, localVideo: null });
+  };
+
   onVoiceAvailabilityChange((available) => {
     set({ available });
     if (!available && get().joined) get().leave();
@@ -81,6 +114,10 @@ export const useVoiceStore = create<VoiceState>((set, get) => {
     selfSpeaking: false,
     peers: {},
     error: null,
+    cameraOn: false,
+    cameraStarting: false,
+    localVideo: null,
+    remoteVideo: {},
 
     join: async (me, members) => {
       if (get().joined || get().joining) return;
@@ -109,13 +146,18 @@ export const useVoiceStore = create<VoiceState>((set, get) => {
       );
       mesh = new VoiceMesh(me, localStream, {
         onPeerState: (name, state) => setPeer(name, state === null ? null : { state }),
-        onPeerStream: attachRemote,
+        onPeerAudio: attachRemote,
+        onPeerVideo: setRemoteVideo,
+        onPeerCamera: (name, on) => {
+          if (get().peers[name]) setPeer(name, { camera: on });
+        },
       });
       set({ joined: true, joining: false, muted: false, peers: {} });
       mesh.setMembers(members);
     },
 
     leave: () => {
+      stopCamera();
       mesh?.leave();
       mesh = null;
       for (const name of [...remoteAudio.keys(), ...remoteMeters.keys()]) detachRemote(name);
@@ -123,7 +165,52 @@ export const useVoiceStore = create<VoiceState>((set, get) => {
       stopSelfMeter = null;
       localStream?.getTracks().forEach((track) => track.stop());
       localStream = null;
-      set({ joined: false, joining: false, muted: false, selfSpeaking: false, peers: {} });
+      set({
+        joined: false,
+        joining: false,
+        muted: false,
+        selfSpeaking: false,
+        peers: {},
+        remoteVideo: {},
+      });
+    },
+
+    toggleCamera: async () => {
+      if (!get().joined || get().cameraStarting) return;
+      if (get().cameraOn) {
+        stopCamera();
+        return;
+      }
+      set({ cameraStarting: true, error: null });
+      let track: MediaStreamTrack | undefined;
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: CAMERA_CONSTRAINTS,
+          audio: false,
+        });
+        track = stream.getVideoTracks()[0];
+      } catch (err) {
+        const denied = err instanceof DOMException && err.name === "NotAllowedError";
+        set({
+          cameraStarting: false,
+          error: denied
+            ? `Camera access was blocked. Allow it in your browser and try again.`
+            : `Could not open your camera.`,
+        });
+        return;
+      }
+      // Left voice while the camera prompt was open: let the camera go.
+      if (!track || !get().joined) {
+        track?.stop();
+        set({ cameraStarting: false });
+        return;
+      }
+      // Unplugging the camera or revoking access ends the track.
+      track.addEventListener("ended", () => {
+        if (get().localVideo === track) stopCamera();
+      });
+      mesh?.setVideoTrack(track);
+      set({ cameraOn: true, cameraStarting: false, localVideo: track });
     },
 
     toggleMute: () => {
