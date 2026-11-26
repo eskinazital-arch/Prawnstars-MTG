@@ -6,6 +6,7 @@ import { NewDeckChoiceDialog } from "@/components/editor/NewDeckChoiceDialog";
 import { useDeckTextImport } from "@/components/editor/useDeckTextImport";
 import { CommunityDeckShelf } from "@/components/play/CommunityDeckShelf";
 import { OwnedDeckShelf } from "@/components/play/OwnedDeckShelf";
+import { PodDeckShelf } from "@/components/play/PodDeckShelf";
 import { PresetDeckShelf } from "@/components/play/PresetDeckShelf";
 import { Button } from "@/components/ui/button";
 import { isFeatureEnabled } from "@/featureFlags";
@@ -144,6 +145,16 @@ export function PlayDeckShelf({
       )}
 
       <div className="space-y-5">
+        <PodDeckShelf
+          pendingDeckId={pendingDeckId}
+          onOpenSavedDeck={(id) =>
+            navigate(
+              { pathname: ROUTES.DECK_EDITOR, search: `?deck=${encodeURIComponent(id)}` },
+              { state: { deckEditorFromList: true } },
+            )
+          }
+          onPlayDeck={onPlayPreset}
+        />
         <OwnedDeckShelf
           decks={ownedDecks}
           lastPlayedDeckId={lastPlayedDeckId}
