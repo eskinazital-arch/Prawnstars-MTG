@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Headphones, Mic, MicOff, PhoneOff, Video, VideoOff } from "lucide-react";
+import { Headphones, Mic, MicOff, PhoneOff, Video, VideoOff, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { VideoTiles, type VideoTileEntry } from "@/components/voice/VideoTiles";
 import { cn } from "@/lib/utils";
@@ -68,6 +68,8 @@ export function VoiceChatBar() {
   const remoteVideo = useVoiceStore((state) => state.remoteVideo);
   const toggleCamera = useVoiceStore((state) => state.toggleCamera);
   const [videoHidden, setVideoHidden] = useState(false);
+  // Phones get a small button instead of the full strip; tapping opens it.
+  const [phoneOpen, setPhoneOpen] = useState(false);
 
   const members = useMemo(
     () =>
@@ -102,94 +104,154 @@ export function VoiceChatBar() {
     }
   }
 
-  return (
+  const panel = (onClose?: () => void) => (
     <div
-      className={cn(
-        "fixed z-50 flex max-w-[calc(100vw-1.5rem)] flex-col gap-2",
-        // It never sits on page content: in a game a slim strip at the top
-        // centre of the board; elsewhere inside the top bar, left of the sound
-        // and account buttons. Cameras hang below it either way.
-        inGame
-          ? "left-1/2 top-2 -translate-x-1/2 items-center"
-          : "right-28 top-[calc(var(--safe-area-inset-top)+0.625rem)] items-end",
-      )}
+      role="region"
+      aria-label={`Voice chat`}
+      className="flex max-w-full flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 shadow-[0_8px_20px_-10px_rgb(0_0_0/0.6)]"
     >
-      {!videoHidden && <div className="order-last">{<VideoTiles tiles={tiles} />}</div>}
+      <Headphones className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+      {onClose && (
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={`Close voice controls`}
+          className="order-last ml-auto grid h-11 w-11 place-items-center rounded-full hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      )}
+      {joined ? (
+        <>
+          <Button
+            size="sm"
+            variant={muted ? "destructive" : "outline"}
+            onClick={toggleMute}
+            aria-pressed={muted}
+            className="touch:min-h-11 gap-1"
+          >
+            {muted ? <MicOff className="h-3.5 w-3.5" /> : <Mic className="h-3.5 w-3.5" />}
+            {muted ? `Unmute` : `Mute`}
+          </Button>
+          <Button
+            size="sm"
+            variant={cameraOn ? "selected" : "outline"}
+            onClick={() => void toggleCamera()}
+            disabled={cameraStarting}
+            aria-pressed={cameraOn}
+            className="touch:min-h-11 gap-1"
+          >
+            {cameraOn ? <Video className="h-3.5 w-3.5" /> : <VideoOff className="h-3.5 w-3.5" />}
+            {cameraStarting ? `Starting…` : cameraOn ? `Camera on` : `Camera`}
+          </Button>
+          {tiles.length > 0 && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setVideoHidden((hidden) => !hidden)}
+              aria-pressed={videoHidden}
+              className="touch:min-h-11"
+            >
+              {videoHidden ? `Show video (${tiles.length})` : `Hide video`}
+            </Button>
+          )}
+          <SpeakerChip name={`You`} speaking={selfSpeaking} muted={muted} peer={undefined} />
+          {others.map((name) => (
+            <SpeakerChip
+              key={name}
+              name={name}
+              peer={peers[name]}
+              speaking={peers[name]?.speaking ?? false}
+            />
+          ))}
+          <Button size="sm" variant="ghost" onClick={leave} className="touch:min-h-11 gap-1">
+            <PhoneOff className="h-3.5 w-3.5" />
+            {`Leave voice`}
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button
+            size="sm"
+            variant="primary"
+            disabled={!available || joining}
+            onClick={() => void join(username, members)}
+            className="touch:min-h-11 gap-1"
+          >
+            <Mic className="h-3.5 w-3.5" />
+            {joining ? `Connecting…` : `Join voice`}
+          </Button>
+          {!available && (
+            <span className="text-ui-meta text-muted-foreground">
+              {`Voice needs a server with peer-to-peer signals turned on.`}
+            </span>
+          )}
+        </>
+      )}
+      {error && <span className="text-ui-meta text-destructive">{error}</span>}
+    </div>
+  );
+  const video = !videoHidden && <VideoTiles tiles={tiles} />;
+  const phoneButton =
+    "grid h-11 w-11 place-items-center rounded-full border border-border bg-card shadow-[0_8px_20px_-10px_rgb(0_0_0/0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
+  return (
+    <>
       <div
-        role="region"
-        aria-label={`Voice chat`}
-        className="flex max-w-full flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 shadow-[0_8px_20px_-10px_rgb(0_0_0/0.6)]"
+        className={cn(
+          "fixed z-50 hidden max-w-[calc(100vw-1.5rem)] flex-col gap-2 md:pointer-fine:flex",
+          // It never sits on page content: in a game a slim strip at the top
+          // centre of the board; elsewhere inside the top bar, left of the sound
+          // and account buttons. Cameras hang below it either way.
+          inGame
+            ? "left-1/2 top-2 -translate-x-1/2 items-center"
+            : "right-28 top-[calc(var(--safe-area-inset-top)+0.625rem)] items-end",
+        )}
       >
-        <Headphones className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
-        {joined ? (
+        {video && <div className="order-last">{video}</div>}
+        {panel()}
+      </div>
+      {/* Touch screens (phones in either orientation, tablets): one small button (plus a mute toggle once joined), out of the
+          way of the board; the full controls open on tap. */}
+      <div
+        className={cn(
+          "fixed z-50 flex max-w-[calc(100vw-1.5rem)] flex-col gap-2 md:pointer-fine:hidden",
+          inGame
+            ? phoneOpen
+              ? "left-1/2 top-[calc(var(--safe-area-inset-top)+0.25rem)] -translate-x-1/2 items-center"
+              : "left-[calc(var(--safe-area-inset-left)+0.5rem)] top-1/2 -translate-y-1/2 items-start"
+            : "bottom-[calc(var(--safe-area-inset-bottom)+5.5rem)] right-3 items-end",
+        )}
+      >
+        {phoneOpen ? (
           <>
-            <Button
-              size="sm"
-              variant={muted ? "destructive" : "outline"}
-              onClick={toggleMute}
-              aria-pressed={muted}
-              className="touch:min-h-11 gap-1"
-            >
-              {muted ? <MicOff className="h-3.5 w-3.5" /> : <Mic className="h-3.5 w-3.5" />}
-              {muted ? `Unmute` : `Mute`}
-            </Button>
-            <Button
-              size="sm"
-              variant={cameraOn ? "selected" : "outline"}
-              onClick={() => void toggleCamera()}
-              disabled={cameraStarting}
-              aria-pressed={cameraOn}
-              className="touch:min-h-11 gap-1"
-            >
-              {cameraOn ? <Video className="h-3.5 w-3.5" /> : <VideoOff className="h-3.5 w-3.5" />}
-              {cameraStarting ? `Starting…` : cameraOn ? `Camera on` : `Camera`}
-            </Button>
-            {tiles.length > 0 && (
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setVideoHidden((hidden) => !hidden)}
-                aria-pressed={videoHidden}
-                className="touch:min-h-11"
-              >
-                {videoHidden ? `Show video (${tiles.length})` : `Hide video`}
-              </Button>
-            )}
-            <SpeakerChip name={`You`} speaking={selfSpeaking} muted={muted} peer={undefined} />
-            {others.map((name) => (
-              <SpeakerChip
-                key={name}
-                name={name}
-                peer={peers[name]}
-                speaking={peers[name]?.speaking ?? false}
-              />
-            ))}
-            <Button size="sm" variant="ghost" onClick={leave} className="touch:min-h-11 gap-1">
-              <PhoneOff className="h-3.5 w-3.5" />
-              {`Leave voice`}
-            </Button>
+            {video}
+            {panel(() => setPhoneOpen(false))}
           </>
         ) : (
-          <>
-            <Button
-              size="sm"
-              variant="primary"
-              disabled={!available || joining}
-              onClick={() => void join(username, members)}
-              className="touch:min-h-11 gap-1"
-            >
-              <Mic className="h-3.5 w-3.5" />
-              {joining ? `Connecting…` : `Join voice`}
-            </Button>
-            {!available && (
-              <span className="text-ui-meta text-muted-foreground">
-                {`Voice needs a server with peer-to-peer signals turned on.`}
-              </span>
+          <div className="flex items-center gap-2">
+            {joined && (
+              <button
+                type="button"
+                onClick={toggleMute}
+                aria-pressed={muted}
+                aria-label={muted ? `Unmute` : `Mute`}
+                className={cn(phoneButton, muted && "border-destructive text-destructive")}
+              >
+                {muted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              </button>
             )}
-          </>
+            <button
+              type="button"
+              onClick={() => setPhoneOpen(true)}
+              aria-label={joined ? `Voice chat, connected` : `Open voice chat`}
+              className={cn(phoneButton, joined && selfSpeaking && "ring-2 ring-[#1F6B4A]")}
+            >
+              <Headphones className={cn("h-4 w-4", joined && "text-[#1F6B4A]")} />
+            </button>
+          </div>
         )}
-        {error && <span className="text-ui-meta text-destructive">{error}</span>}
       </div>
-    </div>
+    </>
   );
 }
