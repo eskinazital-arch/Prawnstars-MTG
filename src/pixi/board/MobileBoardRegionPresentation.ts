@@ -36,8 +36,11 @@ export class MobileBoardRegionPresentation implements BoardRegionPresentation {
     return 0;
   }
 
-  localBlockers(mirrored: boolean, blockers: BlockingRect[]): BlockingRect[] {
-    return mirrored ? blockers : [];
+  // The local (unmirrored) field used to ignore keep-outs, so a land played
+  // with the hand open landed under the hand button and looked unplayed. Keep
+  // cards out from under the hand button and the player plate on every field.
+  localBlockers(_mirrored: boolean, blockers: BlockingRect[]): BlockingRect[] {
+    return blockers;
   }
 
   gridRows(rowCount: number): number[] {

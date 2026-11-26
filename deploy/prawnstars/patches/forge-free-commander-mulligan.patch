@@ -1,0 +1,18 @@
+diff --git a/forge-game/src/main/java/forge/game/mulligan/MulliganService.java b/forge-game/src/main/java/forge/game/mulligan/MulliganService.java
+index 3e795bacad2..5edf57e7076 100644
+--- a/forge-game/src/main/java/forge/game/mulligan/MulliganService.java
++++ b/forge-game/src/main/java/forge/game/mulligan/MulliganService.java
+@@ -34,7 +34,12 @@ public class MulliganService {
+             whoCanMulligan.add(whoCanMulligan.remove(0));
+         }
+ 
+-        boolean firstMullFree = game.getPlayers().size() > 2 || game.getRules().hasAppliedVariant(GameType.Brawl);
++        // Rule 103.5c gives the free first mulligan to multiplayer and Brawl games.
++        // House rule for the Cock Magic Club: every Commander game gets it too,
++        // including 1v1 practice against the AI.
++        boolean firstMullFree = game.getPlayers().size() > 2
++                || game.getRules().hasAppliedVariant(GameType.Brawl)
++                || game.getRules().hasAppliedVariant(GameType.Commander);
+ 
+         for (Player player : whoCanMulligan) {
+             MulliganDefs.MulliganRule rule = StaticData.instance().getMulliganRule();

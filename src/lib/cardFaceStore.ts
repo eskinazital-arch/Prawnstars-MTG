@@ -3,7 +3,9 @@ import { CARD_GLINT_CACHE, offlineCacheAvailable } from "@/lib/cardGlintAssetCac
 import type { CardRaster } from "@/lib/cardRenderTypes";
 
 const STORE_PREFIX = "manabrew-card-faces-";
-const STORE_NAME = `${STORE_PREFIX}${APP_VERSION}-${CARD_GLINT_CACHE}`;
+// "club2": faces rendered before /scryfall-symbols was proxied (2026-11-26)
+// have broken mana symbols; a new name drops them on every device.
+const STORE_NAME = `${STORE_PREFIX}${APP_VERSION}-club2-${CARD_GLINT_CACHE}`;
 const MAX_STORED_FACES = 1500;
 const TRIM_EVERY_WRITES = 50;
 const FACE_QUALITY = 0.92;

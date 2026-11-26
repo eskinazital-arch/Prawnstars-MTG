@@ -17,7 +17,8 @@ export const usePromptPreferencesStore = create<PromptPreferencesState>()(
   persist(
     (set) => ({
       show: {},
-      fullControl: false,
+      // The club plays on FULL by default: you pass priority yourself.
+      fullControl: true,
       confirmPassWithMana: false,
       setShow: (promptType, show) => set((s) => ({ show: { ...s.show, [promptType]: show } })),
       clearShow: (promptType) =>
@@ -31,6 +32,20 @@ export const usePromptPreferencesStore = create<PromptPreferencesState>()(
     }),
     {
       name: "manabrew.promptPreferences",
+      // v1 moved everyone to FULL once; the toggle still switches to AUTO.
+      version: 1,
+      migrate: (persisted, version) => {
+        const state = (persisted ?? {}) as {
+          show?: PromptPreferencesState["show"];
+          confirmPassWithMana?: boolean;
+          fullControl?: boolean;
+        };
+        return {
+          show: state.show ?? {},
+          confirmPassWithMana: state.confirmPassWithMana ?? false,
+          fullControl: version < 1 ? true : (state.fullControl ?? true),
+        };
+      },
       partialize: (s) => ({
         show: s.show,
         fullControl: s.fullControl,
