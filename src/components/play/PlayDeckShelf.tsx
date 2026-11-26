@@ -121,7 +121,9 @@ export function PlayDeckShelf({
   return (
     <section className="min-w-0">
       <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
-        <h2 className="font-serif text-xl font-extrabold">My Decks</h2>
+        <h2 className="text-ui-meta font-medium uppercase tracking-[0.025em] text-muted-foreground">
+          Your decks
+        </h2>
         <div className="flex flex-wrap items-center gap-2">
           {ownedDecks.length > 0 && (
             <Button variant="outline" size="sm" onClick={() => setChoiceOpen(true)}>
@@ -130,7 +132,7 @@ export function PlayDeckShelf({
             </Button>
           )}
           <Button variant="ghost" size="sm" onClick={() => navigate(ROUTES.DECK_EDITOR)}>
-            View All
+            See all
           </Button>
         </div>
       </div>

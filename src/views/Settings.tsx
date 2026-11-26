@@ -57,6 +57,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { HelpCircle, Minus, Pencil, Plus, Server, Trash2 } from "lucide-react";
 import { KNOWN_RELAYS, type KnownRelay } from "@/config/knownRelays";
 import { cn } from "@/lib/utils";
+import { clubCursorEnabled, setClubCursorEnabled } from "@/lib/clubCursor";
 import { useIsShortScreen, useIsTouch } from "@/hooks/useBreakpoints";
 /**
  * Small `?` hover-help icon shown next to a picker label. Renders a
@@ -117,6 +118,29 @@ type SettingsTab =
   | "cache"
   | "account"
   | "assets";
+
+function ClubCursorCard() {
+  const [on, setOn] = useState(clubCursorEnabled);
+  return (
+    <PreferenceCard
+      title={`Club cursor`}
+      description={`The house pointer. Switch it off on this browser if you are sharing your screen with anyone outside the pod.`}
+    >
+      <label className="flex items-center gap-3 text-ui-label">
+        <input
+          type="checkbox"
+          className="h-5 w-5 accent-[#191919]"
+          checked={on}
+          onChange={(event) => {
+            setOn(event.target.checked);
+            setClubCursorEnabled(event.target.checked);
+          }}
+        />
+        {on ? `On` : `Off`}
+      </label>
+    </PreferenceCard>
+  );
+}
 
 export default function Settings() {
   const isGameActive = useGameStore((s) => s.isGameActive);
@@ -500,6 +524,7 @@ export default function Settings() {
               shortTouch && "gap-3",
             )}
           >
+            <ClubCursorCard />
             <PreferenceCard title="Sounds" description="Mute or set the volume for all app sounds.">
               <SoundControls />
             </PreferenceCard>

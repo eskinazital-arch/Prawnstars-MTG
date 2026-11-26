@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import { PrawnMarkPaths } from "./PrawnMark";
+import { ClubMarkPaths } from "./ClubMark";
 
 // Kept under its upstream name so every existing usage (top bar, loading gate,
-// design-system pages) shows the Prawnstars logo without further edits.
+// design-system pages) shows The Cock Magic Club without further edits.
 export function ManaBrewLogo({
   variant = "horizontal",
   height = 56,
@@ -14,7 +14,7 @@ export function ManaBrewLogo({
   className?: string;
   decorative?: boolean;
 }) {
-  const label = decorative ? undefined : "Prawnstars MTG";
+  const label = decorative ? undefined : "The Cock Magic Club";
   if (variant === "symbol") {
     return (
       <svg
@@ -27,14 +27,14 @@ export function ManaBrewLogo({
         aria-hidden={decorative || undefined}
         focusable="false"
       >
-        <PrawnMarkPaths />
+        <ClubMarkPaths />
       </svg>
     );
   }
   const withMark = variant === "horizontal";
   return (
     <span
-      className={cn("inline-flex shrink-0 items-center gap-2 leading-none", className)}
+      className={cn("inline-flex shrink-0 items-center gap-2.5 leading-none", className)}
       role={decorative ? undefined : "img"}
       aria-label={label}
       aria-hidden={decorative || undefined}
@@ -43,19 +43,19 @@ export function ManaBrewLogo({
       {withMark && (
         <svg
           viewBox="0 0 64 64"
-          width={height * 0.82}
-          height={height * 0.82}
+          width={height * 0.8}
+          height={height * 0.8}
           aria-hidden="true"
           focusable="false"
         >
-          <PrawnMarkPaths />
+          <ClubMarkPaths />
         </svg>
       )}
       <span
-        className="font-serif font-extrabold tracking-[-0.01em] text-foreground"
-        style={{ fontSize: height * 0.46 }}
+        className="font-sans font-medium tracking-[-0.02em] text-current"
+        style={{ fontSize: height * 0.38 }}
       >
-        Prawnstars <span className="text-primary">MTG</span>
+        The Cock Magic Club
       </span>
     </span>
   );

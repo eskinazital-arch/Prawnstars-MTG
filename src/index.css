@@ -2,7 +2,7 @@
 
 @theme {
   --font-sans: "Figtree Variable", system-ui, -apple-system, sans-serif;
-  --font-serif: "Bricolage Grotesque Variable", system-ui, -apple-system, sans-serif;
+  --font-serif: "Figtree Variable", system-ui, -apple-system, sans-serif;
   --font-game: "Figtree Variable", system-ui, -apple-system, sans-serif;
 
   --color-border: var(--border);
@@ -555,16 +555,6 @@
   }
 }
 
-/* Booster-wrapper seam: a crimped zigzag cut along the top edge of a tile. */
-@utility crimp-top {
-  -webkit-mask:
-    conic-gradient(from -45deg at bottom, #000 90deg, #0000 0) top / 14px 7px repeat-x,
-    linear-gradient(#000 0 0) bottom / 100% calc(100% - 7px) no-repeat;
-  mask:
-    conic-gradient(from -45deg at bottom, #000 90deg, #0000 0) top / 14px 7px repeat-x,
-    linear-gradient(#000 0 0) bottom / 100% calc(100% - 7px) no-repeat;
-}
-
 @utility no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -740,7 +730,34 @@
 }
 
 .font-serif {
-  font-weight: 700;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+/* The club cursor (src/lib/clubCursor.ts). Text fields keep the I-beam so
+   typing still feels normal; the game's targeting glyph still hides it. */
+html.club-cursor,
+html.club-cursor * {
+  cursor:
+    url("/cursor-club.svg") 4 4,
+    auto !important;
+}
+html.club-cursor
+  :is(
+    input:not([type="checkbox"], [type="radio"], [type="range"], [type="button"], [type="submit"]),
+    textarea,
+    [contenteditable="true"]
+  ) {
+  cursor: text !important;
+}
+html.club-cursor :is(button, a, [role="button"], select):disabled {
+  cursor:
+    url("/cursor-club.svg") 4 4,
+    not-allowed !important;
+}
+html.club-cursor .targeting-cursor-hidden,
+html.club-cursor .targeting-cursor-hidden * {
+  cursor: none !important;
 }
 
 .font-game {

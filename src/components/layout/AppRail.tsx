@@ -3,7 +3,8 @@ import type { ComponentType } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { PrawnMark } from "./PrawnMark";
+import { usePodDecksStore } from "@/stores/usePodDecksStore";
+import { ClubMark } from "./ClubMark";
 import { isNavDestinationActive } from "./navDestinations";
 
 interface RailItem {
@@ -13,13 +14,13 @@ interface RailItem {
 }
 
 const RAIL_ITEMS: RailItem[] = [
-  { to: ROUTES.PLAY, label: `Play`, icon: House },
-  { to: ROUTES.LOBBY, label: `Multiplayer`, icon: Users },
+  { to: ROUTES.PLAY, label: `Home`, icon: House },
+  { to: ROUTES.LOBBY, label: `Tables`, icon: Users },
   { to: ROUTES.PLAY_OFFLINE_CONSTRUCTED, label: `Practice`, icon: Swords },
   { to: ROUTES.PLAY_OFFLINE_LIMITED, label: `Draft`, icon: PackageOpen },
   { to: ROUTES.DECK_EDITOR, label: `Decks`, icon: Layers },
   { to: ROUTES.SEARCH, label: `Cards`, icon: Search },
-  { to: ROUTES.COMPANION, label: `Life`, icon: HeartPulse },
+  { to: ROUTES.COMPANION, label: `Life counter`, icon: HeartPulse },
 ];
 
 function isLimitedPath(pathname: string): boolean {
@@ -37,45 +38,56 @@ function isRailItemActive(to: string, pathname: string): boolean {
   return isNavDestinationActive(to, pathname);
 }
 
-/** The pink rail: the app's primary navigation on desktop-class screens. */
+/** The club's side panel: primary navigation on desktop-class screens. */
 export function AppRail({ disabled = false }: { disabled?: boolean }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const podMe = usePodDecksStore((state) => state.me);
   return (
-    <nav
-      aria-label="Primary"
-      className="hidden w-[5.5rem] shrink-0 flex-col items-center gap-1.5 bg-primary pb-4 pl-[var(--safe-area-inset-left)] pt-[calc(var(--safe-area-inset-top)+1rem)] text-primary-foreground md:pointer-fine:flex"
-    >
-      <button
-        type="button"
-        onClick={() => navigate(ROUTES.PLAY)}
-        aria-label={`Prawnstars MTG home`}
-        disabled={disabled}
-        className="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-background shadow-[0_6px_14px_-6px_rgb(26_16_48/0.6)] motion-safe:transition-transform motion-safe:hover:-rotate-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+    <div className="hidden w-60 shrink-0 p-2.5 pr-0 pt-[calc(var(--safe-area-inset-top)+0.625rem)] md:pointer-fine:block">
+      <nav
+        aria-label="Primary"
+        className="flex h-full flex-col gap-1 rounded-2xl bg-primary px-3 py-5 text-primary-foreground"
       >
-        <PrawnMark size={42} />
-      </button>
-      {RAIL_ITEMS.map(({ to, label, icon: Icon }) => {
-        const active = isRailItemActive(to, location.pathname);
-        return (
-          <button
-            key={to}
-            type="button"
-            disabled={disabled}
-            aria-current={active ? "page" : undefined}
-            onClick={() => navigate(to)}
-            className={cn(
-              "flex w-[4.25rem] flex-col items-center gap-1 rounded-xl px-1 py-2 text-[0.6875rem] font-semibold leading-tight motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background disabled:opacity-50",
-              active
-                ? "bg-background text-foreground"
-                : "text-primary-foreground hover:bg-background/15",
-            )}
-          >
-            <Icon className={cn("h-5 w-5", active && "text-primary")} />
-            {label}
-          </button>
-        );
-      })}
-    </nav>
+        <button
+          type="button"
+          onClick={() => navigate(ROUTES.PLAY)}
+          disabled={disabled}
+          className="mb-6 flex items-center gap-3 rounded-xl px-2 py-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+        >
+          <ClubMark size={42} className="shrink-0" />
+          <span className="text-[0.9375rem] font-medium leading-tight tracking-[-0.01em]">
+            The Cock Magic Club
+          </span>
+        </button>
+        {RAIL_ITEMS.map(({ to, label, icon: Icon }) => {
+          const active = isRailItemActive(to, location.pathname);
+          return (
+            <button
+              key={to}
+              type="button"
+              disabled={disabled}
+              aria-current={active ? "page" : undefined}
+              onClick={() => navigate(to)}
+              className={cn(
+                "flex items-center gap-3 rounded-full px-4 py-2.5 text-left text-ui-label font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 disabled:opacity-50",
+                active
+                  ? "bg-white text-[#191919]"
+                  : "text-[#bdbdbd] hover:bg-white/10 hover:text-white",
+              )}
+            >
+              <Icon className="h-[1.125rem] w-[1.125rem] shrink-0" />
+              {label}
+            </button>
+          );
+        })}
+        <div className="mt-auto border-t border-[#303030] px-2 pt-4 text-ui-meta text-[#8c8c8c]">
+          {podMe ? `Drinking with` : `You are`}
+          <b className="block truncate text-ui-label font-medium text-white">
+            {podMe ?? `a guest, pick your name on Home`}
+          </b>
+        </div>
+      </nav>
+    </div>
   );
 }

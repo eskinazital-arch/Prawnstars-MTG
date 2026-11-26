@@ -3,12 +3,9 @@ import type { GameFontSizes, GameThemeColorMap } from "./gameTheme";
 import { buildGameColors, type BasePalette } from "./buildGameColors";
 import { BRAND_COLORS } from "./brand";
 
-const { ember, mana, sage, neutral } = BRAND_COLORS;
-const lightMuted = "#E6DACA";
-const lightBorder = "#C7B9A8";
-const darkBorder = "#3D2C66";
-const lightInput = "#887765";
-const darkInput = "#7D6BA8";
+const { ember, mana, sage, neutral, club } = BRAND_COLORS;
+const darkBorder = "#303030";
+const darkInput = "#8C8C8C";
 const lightDestructive = "#A6283F";
 const darkDestructive = "#F0788B";
 const lightWarning = "#735400";
@@ -53,34 +50,36 @@ const MANABREW_THEME: {
   gameColors: GameThemeColorMap;
   gameFontSizes: GameFontSizes;
 } = {
-  name: "Prawnstars",
+  name: "Cock Magic Club",
+  // The Cock Magic Club: the one look (see PRODUCT.md, DESIGN.md). White page,
+  // near-black ink and panels, hairlines; club green only for small accents.
   light: {
-    background: neutral.cream,
-    foreground: neutral.soot,
-    card: neutral.linen,
-    "card-foreground": neutral.soot,
-    popover: neutral.ivory,
-    "popover-foreground": neutral.soot,
-    primary: ember[800],
-    "primary-hover": ember[900],
-    "primary-foreground": neutral.white,
-    secondary: mana[700],
-    "secondary-foreground": neutral.white,
-    muted: lightMuted,
-    "muted-foreground": neutral.darkPewter,
-    accent: lightMuted,
-    "accent-foreground": neutral.soot,
-    "brand-accent": sage[700],
-    "brand-accent-muted": sage[100],
-    "brand-accent-foreground": sage[700],
+    background: "#FFFFFF",
+    foreground: "#191919",
+    card: "#F3F3F3",
+    "card-foreground": "#191919",
+    popover: "#FFFFFF",
+    "popover-foreground": "#191919",
+    primary: "#191919",
+    "primary-hover": "#303030",
+    "primary-foreground": "#FFFFFF",
+    secondary: club.green,
+    "secondary-foreground": "#FFFFFF",
+    muted: "#F3F3F3",
+    "muted-foreground": "#6A6A6A",
+    accent: "#F3F3F3",
+    "accent-foreground": "#191919",
+    "brand-accent": club.green,
+    "brand-accent-muted": "#E6F0EA",
+    "brand-accent-foreground": club.green,
     destructive: lightDestructive,
-    "destructive-foreground": neutral.white,
-    border: lightBorder,
-    input: lightInput,
-    ring: ember[800],
-    selection: mana[100],
-    "selection-border": mana[700],
-    "selection-foreground": mana[800],
+    "destructive-foreground": "#FFFFFF",
+    border: "#D1D1D1",
+    input: "#8C8C8C",
+    ring: "#191919",
+    selection: "#E6F0EA",
+    "selection-border": club.green,
+    "selection-foreground": "#123D2A",
     commander: lightWarning,
     warning: lightWarning,
     overlay: "#000000",

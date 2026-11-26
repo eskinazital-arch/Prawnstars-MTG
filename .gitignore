@@ -130,3 +130,7 @@ packages/forge-wasm/forgeharness.js
 packages/forge-wasm/forgeharness.js.wasm
 
 scripts/sync-scryfall-assets.mjs
+
+# Prawnstars MTG deployment on this PC
+deploy/prawnstars/secrets.local.ps1
+deploy/prawnstars/logs/

@@ -1,5 +1,4 @@
-import { ArrowRight, PackageOpen, Swords, Users } from "lucide-react";
-import type { ComponentType } from "react";
+import { ArrowRight, PackageOpen, Swords } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UpdateCallout } from "@/components/layout/UpdateCallout";
@@ -19,8 +18,6 @@ import type { PresetDeck } from "@/lib/presetDecks";
 import type { RoomInfo } from "@/types/server";
 import { toast } from "sonner";
 
-type WrapperTone = "pink" | "teal" | "violet";
-
 const FORMAT_LABELS: Record<string, string> = {
   commander: `Commander`,
   standard: `Standard`,
@@ -37,7 +34,7 @@ function formatLabel(format: string | undefined): string {
   return FORMAT_LABELS[format] ?? format.charAt(0).toUpperCase() + format.slice(1);
 }
 
-/** Up to three ready-made decks, Commander first, then one per other format. */
+/** Up to three house decks, Commander first, then one per other format. */
 function pickReadyMade(decks: PresetDeck[]): PresetDeck[] {
   const picked: PresetDeck[] = [];
   const seen = new Set<string>();
@@ -53,65 +50,36 @@ function pickReadyMade(decks: PresetDeck[]): PresetDeck[] {
   return picked;
 }
 
-const WRAPPER_TONE: Record<WrapperTone, string> = {
-  pink: "bg-primary text-primary-foreground",
-  teal: "bg-brand-accent text-background",
-  violet: "bg-secondary text-background",
-};
+function greeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 5) return `Late one`;
+  if (hour < 12) return `Morning`;
+  if (hour < 17) return `Afternoon`;
+  return `Evening`;
+}
 
-/** A booster-wrapper tile: one bright colour per way into the game, crimped on top. */
-function WrapperTile({
-  tone,
-  title,
-  detail,
-  action,
-  icon: Icon,
-  onClick,
-  wide = false,
-}: {
-  tone: WrapperTone;
-  title: string;
-  detail: string;
-  action: string;
-  icon: ComponentType<{ className?: string }>;
-  onClick: () => void;
-  wide?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "crimp-top group relative flex min-h-48 flex-col justify-between rounded-b-2xl rounded-t-md px-6 pb-5 pt-8 text-left shadow-[0_10px_24px_-14px_rgb(0_0_0/0.7)] motion-safe:transition-transform motion-safe:hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-        WRAPPER_TONE[tone],
-        wide && "md:col-span-2 xl:col-span-1",
-      )}
-    >
-      <div>
-        <Icon className="mb-3 h-6 w-6 opacity-80" />
-        <h2 className="font-serif text-3xl font-extrabold leading-none tracking-[-0.01em]">
-          {title}
-        </h2>
-        <p className="mt-2 text-ui-body font-semibold">{detail}</p>
-      </div>
-      <span className="mt-5 inline-flex items-center gap-2 self-start rounded-full bg-background px-4 py-2 text-ui-label font-semibold text-foreground motion-safe:transition-[gap] group-hover:gap-3">
-        {action}
-        <ArrowRight className="h-4 w-4" />
-      </span>
-    </button>
-  );
+const PILL =
+  "inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-ui-label font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 disabled:opacity-60 [&_svg]:h-4 [&_svg]:w-4";
+const PILL_ON_DARK = `${PILL} bg-white text-[#191919] hover:bg-[#f3f3f3] focus-visible:ring-white/60`;
+const PILL_ON_DARK_GHOST = `${PILL} border border-[#303030] text-white hover:bg-white/10 focus-visible:ring-white/60`;
+const PILL_OUTLINE = `${PILL} min-h-9 shrink-0 px-4 border border-border text-foreground hover:bg-muted focus-visible:ring-ring`;
+const BOX = "rounded-2xl border border-border p-5";
+const LABEL = "mb-2 text-ui-meta font-medium uppercase tracking-[0.025em] text-muted-foreground";
+
+function seatedCount(room: RoomInfo): number {
+  return room.players.filter((player) => !player.is_bot).length;
 }
 
 function SeatDots({ room }: { room: RoomInfo }) {
-  const seated = room.players.filter((player) => !player.is_bot).length;
+  const seated = seatedCount(room);
   return (
-    <span className="flex gap-1" aria-label={`${seated} of ${room.max_players} seats taken`}>
+    <span className="flex shrink-0 gap-1" aria-hidden>
       {Array.from({ length: room.max_players }, (_, index) => (
         <span
           key={index}
           className={cn(
-            "h-5 w-5 rounded-full border",
-            index < seated ? "border-primary bg-primary" : "border-border bg-card",
+            "h-3.5 w-3.5 rounded-full border",
+            index < seated ? "border-primary bg-primary" : "border-[#bdbdbd] bg-background",
           )}
         />
       ))}
@@ -145,7 +113,7 @@ export function PlayHome() {
   const firstRoom = openRooms[0];
   const readyMade = pickReadyMade(presetDecks);
 
-  // One click from home to a seat: join the table, then show it in Multiplayer.
+  // One click from home to a seat: join the table, then show it on Tables.
   async function takeSeat(room: RoomInfo) {
     if (seating) return;
     setSeating(room.room_id);
@@ -164,13 +132,16 @@ export function PlayHome() {
     picker?.scrollIntoView({ behavior: "smooth", block: "center" });
     picker?.focus({ preventScroll: true });
   }
-  const podDetail = !connected
+
+  const heroDetail = !connected
     ? connecting
-      ? `Connecting to the server…`
-      : `Server offline`
+      ? `Getting you through the door…`
+      : `The server is not answering. Practice and draft still work.`
     : firstRoom
-      ? `${firstRoom.room_name} · ${firstRoom.players.filter((p) => !p.is_bot).length} of ${firstRoom.max_players} seated`
-      : `No open tables yet`;
+      ? seatedCount(firstRoom) === 0
+        ? `${firstRoom.room_name} is set up and empty. Be the first to sit down.`
+        : `${firstRoom.room_name} has a seat for you. ${seatedCount(firstRoom)} of ${firstRoom.max_players} are in.`
+      : `No tables open yet. Open one and the pod will see it here.`;
 
   useEffect(() => {
     const name = relayUsername();
@@ -207,33 +178,7 @@ export function PlayHome() {
 
   return (
     <div className="h-full min-h-0 overflow-y-auto">
-      <div className="mx-auto flex w-full max-w-[90rem] flex-col gap-8 px-5 py-7 sm:px-8 lg:px-10">
-        <header className="flex flex-wrap items-end justify-between gap-3">
-          <h1 className="font-serif text-4xl font-extrabold tracking-[-0.015em] text-balance">
-            {podMe ? `Ready to play, ${podMe}?` : `Ready to play?`}
-          </h1>
-          <div className="flex flex-wrap gap-2 text-ui-label">
-            {podMe ? (
-              <span className="rounded-full border border-border bg-card px-3 py-1.5">
-                Playing as <b className="font-semibold">{podMe}</b>
-              </span>
-            ) : (
-              <button
-                type="button"
-                onClick={focusNamePicker}
-                className="rounded-full bg-primary px-3 py-1.5 font-semibold text-primary-foreground motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                Pick your name
-              </button>
-            )}
-            {connected && (
-              <span className="rounded-full border border-border bg-card px-3 py-1.5 tabular-nums">
-                {players.length} online
-              </span>
-            )}
-          </div>
-        </header>
-
+      <div className="mx-auto flex w-full max-w-[90rem] flex-col gap-2.5 p-2.5">
         <UpdateCallout />
 
         {resumeSession && (
@@ -241,65 +186,87 @@ export function PlayHome() {
         )}
 
         <section
-          aria-label={`Ways to play`}
+          aria-label={`Tonight`}
           className={cn(
-            "grid gap-5 md:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1fr]",
+            "flex flex-col justify-between gap-8 rounded-2xl bg-primary px-7 py-8 text-primary-foreground sm:px-10 sm:py-10 lg:min-h-72",
             resumePending && "hidden",
           )}
         >
-          <WrapperTile
-            tone="pink"
-            title={`Play the pod`}
-            detail={podDetail}
-            action={firstRoom ? `Take a seat` : `Open a table`}
-            icon={Users}
-            onClick={() => (firstRoom ? void takeSeat(firstRoom) : navigate(ROUTES.LOBBY))}
-            wide
-          />
-          <WrapperTile
-            tone="teal"
-            title={`Practice vs AI`}
-            detail={`Any deck, any format`}
-            action={`Start a game`}
-            icon={Swords}
-            onClick={() => navigate(ROUTES.PLAY_OFFLINE_CONSTRUCTED)}
-          />
-          <WrapperTile
-            tone="violet"
-            title={`Draft and sealed`}
-            detail={`Crack packs and build on the spot`}
-            action={`Open packs`}
-            icon={PackageOpen}
-            onClick={() => navigate(ROUTES.PLAY_OFFLINE_LIMITED)}
-          />
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h1 className="text-5xl font-light leading-[1.02] tracking-[-0.05em] text-balance sm:text-6xl">
+                {greeting()}
+                {podMe ? `, ${podMe}.` : `.`}
+              </h1>
+              <p className="mt-4 max-w-xl text-ui-body text-[#bdbdbd]">{heroDetail}</p>
+            </div>
+            <div className="flex flex-wrap gap-2 text-ui-meta text-[#bdbdbd]">
+              {connected && (
+                <span className="rounded-full border border-[#303030] px-3 py-1.5 tabular-nums">
+                  {players.length} in the club
+                </span>
+              )}
+              {!podMe && (
+                <button
+                  type="button"
+                  onClick={focusNamePicker}
+                  className="rounded-full border border-[#303030] px-3 py-1.5 text-white hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                >
+                  Tell us who you are
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className={PILL_ON_DARK}
+              disabled={seating !== null}
+              onClick={() => (firstRoom ? void takeSeat(firstRoom) : navigate(ROUTES.LOBBY))}
+            >
+              {firstRoom ? (seating ? `Taking your seat…` : `Take a seat`) : `Open a table`}
+              <ArrowRight />
+            </button>
+            <button
+              type="button"
+              className={PILL_ON_DARK_GHOST}
+              onClick={() => navigate(ROUTES.PLAY_OFFLINE_CONSTRUCTED)}
+            >
+              <Swords /> Practice vs AI
+            </button>
+            <button
+              type="button"
+              className={PILL_ON_DARK_GHOST}
+              onClick={() => navigate(ROUTES.PLAY_OFFLINE_LIMITED)}
+            >
+              <PackageOpen /> Draft and sealed
+            </button>
+          </div>
         </section>
 
-        <div
-          className={cn(
-            "grid items-start gap-6 lg:grid-cols-[1.2fr_1fr]",
-            resumePending && "hidden",
-          )}
-        >
-          <section aria-labelledby="open-tables">
-            <h2 id="open-tables" className="mb-3 font-serif text-xl font-extrabold">
-              Open tables
+        <div className={cn("grid items-start gap-2.5 lg:grid-cols-2", resumePending && "hidden")}>
+          <section aria-labelledby="on-tonight" className={BOX}>
+            <h2 id="on-tonight" className={LABEL}>
+              On tonight
             </h2>
             {connected && openRooms.length > 0 ? (
-              <ul className="grid gap-2.5">
+              <ul className="divide-y divide-border">
                 {openRooms.map((room) => (
                   <li key={room.room_id}>
                     <button
                       type="button"
                       onClick={() => void takeSeat(room)}
                       disabled={seating !== null}
-                      className="flex w-full items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3 text-left motion-safe:transition-colors hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+                      className="group flex w-full items-center justify-between gap-4 rounded-lg py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
                     >
-                      <span>
-                        <b className="block font-semibold">{room.room_name}</b>
+                      <span className="min-w-0">
+                        <b className="block truncate font-medium group-hover:underline">
+                          {room.room_name}
+                        </b>
                         <span className="text-ui-meta text-muted-foreground">
                           {seating === room.room_id
                             ? `Taking your seat…`
-                            : `${room.format === "Any" ? `Any format` : room.format} · click to take a seat`}
+                            : `${room.format === "Any" ? `Any format` : room.format} · ${seatedCount(room)} of ${room.max_players} seated`}
                         </span>
                       </span>
                       <SeatDots room={room} />
@@ -308,35 +275,44 @@ export function PlayHome() {
                 ))}
               </ul>
             ) : (
-              <p className="rounded-xl border border-dashed border-border px-4 py-5 text-ui-body text-muted-foreground">
-                {connected
-                  ? `No open tables right now. Open one from Multiplayer and the pod will see it here.`
-                  : `Connecting to the server…`}
-              </p>
+              <div className="flex flex-wrap items-center justify-between gap-3 py-2">
+                <p className="text-ui-body text-muted-foreground">
+                  {connected ? `Nothing on yet.` : `Waiting on the server…`}
+                </p>
+                {connected && (
+                  <button
+                    type="button"
+                    className={PILL_OUTLINE}
+                    onClick={() => navigate(ROUTES.LOBBY)}
+                  >
+                    Open a table
+                  </button>
+                )}
+              </div>
             )}
           </section>
 
-          <section aria-labelledby="ready-made">
-            <h2 id="ready-made" className="mb-3 font-serif text-xl font-extrabold">
-              Try a ready-made deck
+          <section aria-labelledby="house-decks" className={BOX}>
+            <h2 id="house-decks" className={LABEL}>
+              House decks
             </h2>
-            <ul className="grid gap-2.5">
+            <ul className="divide-y divide-border">
               {readyMade.map((deck) => (
                 <li
                   key={deck.id ?? deck.name}
-                  className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3"
+                  className="flex items-center justify-between gap-4 py-3"
                 >
                   <span className="min-w-0">
-                    <b className="block truncate font-semibold">{deck.name}</b>
+                    <b className="block truncate font-medium">{deck.name}</b>
                     <span className="text-ui-meta text-muted-foreground">
-                      {formatLabel(deck.format)} · practice vs AI
+                      {formatLabel(deck.format)} · borrow it against the AI
                     </span>
                   </span>
                   <button
                     type="button"
                     onClick={() => void quickPlayPreset(deck)}
                     disabled={pendingDeckId !== null}
-                    className="shrink-0 rounded-full bg-brand-accent px-4 py-1.5 text-ui-label font-semibold text-background motion-safe:transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+                    className={PILL_OUTLINE}
                   >
                     Play
                   </button>
@@ -346,7 +322,7 @@ export function PlayHome() {
           </section>
         </div>
 
-        <div className={cn(resumePending && "hidden")}>
+        <div className={cn("px-1 pt-4", resumePending && "hidden")}>
           <PlayDeckShelf
             onPlay={quickPlay}
             onPlayPreset={quickPlayPreset}

@@ -87,7 +87,8 @@ function LocalizedApplication({ devToolsEnabled }: { devToolsEnabled: boolean })
   const previewMode = useThemePreviewMode();
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem forcedTheme={previewMode}>
+    // The Cock Magic Club commits to one white look (PRODUCT.md), so light is forced.
+    <ThemeProvider attribute="class" defaultTheme="light" forcedTheme={previewMode ?? "light"}>
       <ThemeApplicator>
         <TooltipProvider delayDuration={120} skipDelayDuration={300}>
           <PlatformRuntimeChecks />

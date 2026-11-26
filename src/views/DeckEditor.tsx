@@ -845,7 +845,7 @@ export default function DeckEditor() {
                                 )
                             : undefined
                         }
-                        badge="Ready-made"
+                        badge="House"
                         engines={presetEnginesBySavedId.get(s.id)}
                       />
                     ))}

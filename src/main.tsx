@@ -1,5 +1,4 @@
 import { createRoot } from "react-dom/client";
-import "@fontsource-variable/bricolage-grotesque";
 import "@fontsource-variable/figtree";
 import "@fontsource-variable/figtree/wght-italic.css";
 import "./index.css";
@@ -10,6 +9,9 @@ import { initializeLocalization } from "./i18n/runtime";
 import { DISPLAY_FONT_FAMILY, UI_FONT_FAMILY } from "@/themes/typography";
 import { initializeErrorReporting, reportClientError } from "@/lib/errorReporting";
 import { initializeClientAnalytics } from "@/lib/clientAnalytics";
+import { applyClubCursor } from "@/lib/clubCursor";
+
+applyClubCursor();
 
 initializeErrorReporting();
 initializeClientAnalytics();

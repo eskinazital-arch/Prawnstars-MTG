@@ -81,23 +81,23 @@ export function MultiplayerStartPanel({
     );
   }
   const pill =
-    "inline-flex min-h-10 items-center gap-2 rounded-full px-4 text-ui-label font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background disabled:opacity-60 [&_svg]:h-4 [&_svg]:w-4";
-  // The lobby's way in, in the same crimped wrapper language as the Play home.
+    "inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-ui-label font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 disabled:opacity-60 [&_svg]:h-4 [&_svg]:w-4";
+  // The lobby's way in: the same near-black club panel as the Play home.
   return (
-    <section className="crimp-top flex flex-wrap items-center justify-between gap-5 rounded-b-2xl rounded-t-md bg-primary px-6 pb-5 pt-8 text-primary-foreground shadow-[0_10px_24px_-14px_rgb(0_0_0/0.7)]">
+    <section className="flex flex-wrap items-center justify-between gap-5 rounded-2xl bg-primary px-7 py-7 text-primary-foreground">
       <div className="min-w-0">
-        <h2 className="flex items-center gap-2 font-serif text-3xl font-extrabold leading-none tracking-[-0.01em]">
+        <h2 className="flex items-center gap-2 text-4xl font-light leading-none tracking-[-0.05em]">
           {searching && <Loader2 className="h-6 w-6 animate-spin motion-reduce:animate-none" />}
           {title}
         </h2>
-        <p className="mt-2 text-ui-body font-semibold">
-          {detail ?? "Open a table for the pod, or let the server find you a game."}
+        <p className="mt-3 text-ui-body text-[#bdbdbd]">
+          {detail ?? "Open a table and the pod sees it on their home page."}
         </p>
       </div>
       {searching ? (
         <button
           type="button"
-          className={cn(pill, "bg-background text-foreground hover:bg-card")}
+          className={cn(pill, "bg-white text-[#191919] hover:bg-[#f3f3f3]")}
           onClick={() =>
             void leave().catch((error: unknown) =>
               toast.error(error instanceof Error ? error.message : "Could not cancel the search."),
@@ -110,7 +110,7 @@ export function MultiplayerStartPanel({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className={cn(pill, "bg-background text-foreground hover:bg-card")}
+            className={cn(pill, "bg-white text-[#191919] hover:bg-[#f3f3f3]")}
             onClick={onSetUp}
             disabled={disabled}
           >
@@ -119,7 +119,7 @@ export function MultiplayerStartPanel({
           {onFindGame && (
             <button
               type="button"
-              className={cn(pill, "border-2 border-background/70 hover:bg-background/15")}
+              className={cn(pill, "border border-[#303030] text-white hover:bg-white/10")}
               onClick={onFindGame}
               disabled={disabled}
             >

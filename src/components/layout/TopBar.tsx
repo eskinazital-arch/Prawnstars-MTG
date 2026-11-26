@@ -17,19 +17,19 @@ function getRouteTitle(pathname: string, search: string): string | null {
   pathname = normalizePathname(pathname);
   if (pathname === ROUTES.PLAY) return null;
   if (pathname === ROUTES.PLAY_OFFLINE_CONSTRUCTED) {
-    return `Singleplayer`;
+    return `Practice vs AI`;
   }
   if (pathname === ROUTES.PLAY_OFFLINE_LIMITED) {
-    return `Singleplayer`;
+    return `Draft and sealed`;
   }
   if (pathname.startsWith(`${ROUTES.PLAY_DECK}/`)) {
     return `Play Deck`;
   }
   if (pathname === ROUTES.LOBBY) {
-    return `Multiplayer`;
+    return `Tables`;
   }
   if (pathname === ROUTES.SEARCH) {
-    return `Card Search`;
+    return `Cards`;
   }
   if (pathname === ROUTES.DECK_EDITOR) {
     return new URLSearchParams(search).has("deck") ? `Deck Editor` : `My Decks`;
@@ -62,13 +62,13 @@ function getRouteTitle(pathname: string, search: string): string | null {
     return `Gauntlet`;
   }
   if (pathname === ROUTES.COMPANION) {
-    return `Life Tracker`;
+    return `Life counter`;
   }
   if (pathname === ROUTES.SETTINGS) {
-    return `Preferences`;
+    return `Settings`;
   }
   if (pathname === ROUTES.ABOUT) {
-    return `About Prawnstars MTG`;
+    return `About the club`;
   }
   if (pathname === ROUTES.DESIGN_SYSTEM) {
     return `Design System`;
@@ -108,20 +108,14 @@ export function TopBar({ override }: TopBarProps) {
     }
   }
   return (
-    <header className="relative z-40 flex min-h-16 min-w-0 items-center gap-3 border-b border-border/70 bg-background py-2 pl-[calc(var(--safe-area-inset-left)+1rem)] pr-[calc(var(--safe-area-inset-right)+1rem)] pt-[calc(var(--safe-area-inset-top)+0.375rem)] sm:pl-[calc(var(--safe-area-inset-left)+1.5rem)] sm:pr-[calc(var(--safe-area-inset-right)+1.5rem)] lg:pl-[calc(var(--safe-area-inset-left)+2rem)] lg:pr-[calc(var(--safe-area-inset-right)+2rem)]">
+    <header className="relative z-40 flex min-h-16 min-w-0 items-center gap-3 bg-background py-2 pl-[calc(var(--safe-area-inset-left)+1rem)] pr-[calc(var(--safe-area-inset-right)+1rem)] pt-[calc(var(--safe-area-inset-top)+0.375rem)] sm:pl-[calc(var(--safe-area-inset-left)+1.5rem)] sm:pr-[calc(var(--safe-area-inset-right)+1.5rem)] lg:pl-[calc(var(--safe-area-inset-left)+2rem)] lg:pr-[calc(var(--safe-area-inset-right)+2rem)]">
       <button
         type="button"
         onClick={goHome}
-        aria-label={`Prawnstars MTG home`}
-        className="group relative flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-xl px-1 py-0 motion-safe:transition-colors hover:bg-primary/10 focus-visible:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring touch:min-w-11 text-ui-label whitespace-normal"
+        aria-label={`The Cock Magic Club home`}
+        className="group relative flex min-h-11 min-w-11 shrink-0 md:pointer-fine:hidden items-center justify-center rounded-xl px-1 py-0 motion-safe:transition-colors hover:bg-primary/10 focus-visible:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring touch:min-w-11 text-ui-label whitespace-normal"
       >
-        {/* The rail carries the mark on desktop; smaller screens get mark and name. */}
-        <ManaBrewLogo
-          decorative
-          variant="wordmark"
-          height={44}
-          className="hidden md:pointer-fine:inline-flex"
-        />
+        {/* The side panel carries the name on desktop; smaller screens get mark and name. */}
         <ManaBrewLogo
           decorative
           height={44}
@@ -131,8 +125,8 @@ export function TopBar({ override }: TopBarProps) {
       </button>
       {title && (
         <>
-          <span className="h-5 w-px shrink-0 bg-border" aria-hidden />
-          <h1 className="min-w-0 break-words font-serif text-lg font-bold" title={title}>
+          <span className="h-5 w-px shrink-0 bg-border md:pointer-fine:hidden" aria-hidden />
+          <h1 className="min-w-0 break-words text-2xl font-light tracking-[-0.04em]" title={title}>
             {title}
           </h1>
         </>

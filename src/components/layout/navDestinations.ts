@@ -46,8 +46,8 @@ export function isNavDestinationActive(to: string, pathname: string): boolean {
 }
 export function getTopBarNav(signedIn = false): NavDestination[] {
   const direct: NavDestination[] = [
-    { to: ROUTES.PLAY_OFFLINE_CONSTRUCTED, label: `Singleplayer`, icon: Swords },
-    { to: ROUTES.LOBBY, label: `Multiplayer`, icon: Users },
+    { to: ROUTES.PLAY_OFFLINE_CONSTRUCTED, label: `Practice`, icon: Swords },
+    { to: ROUTES.LOBBY, label: `Tables`, icon: Users },
     { to: ROUTES.DECK_EDITOR, label: `My Decks`, icon: Layers },
   ];
   if (isFeatureEnabled("deckHub")) {

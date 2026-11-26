@@ -53,8 +53,8 @@ export function PodDeckShelf({ pendingDeckId, onOpenSavedDeck, onPlayDeck }: Pod
         </AppSelect>
         <span className="text-ui-meta text-muted-foreground">
           {me
-            ? `Your pod decks are in My Decks and update automatically.`
-            : `Pick your name and your decks show up in My Decks, ready to play.`}
+            ? `Your decks are on your shelf and stay in sync with the pod.`
+            : `Pick your name and your decks land on your shelf, ready to play.`}
         </span>
       </div>
       <div className="space-y-4">

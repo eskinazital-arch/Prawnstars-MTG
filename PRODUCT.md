@@ -52,12 +52,16 @@ Technical constraints:
 
 Undecided:
 
-- Where the private server runs (this PC or a cloud server) and the custom domain name.
+- Nothing open on hosting: it runs on Tal's PC behind a Cloudflare Tunnel at https://cockmagic.xyz (Tal, 2026-11-26).
 
 ## Brand Commitments
 
-- Name: **Prawnstars MTG**.
-- The logo is colorful and bright (Tal, 2026-11-26).
+- Name on screen: **The Cock Magic Club**; domain cockmagic.xyz (Tal, 2026-11-26). Never "The Cock & Magic". Replaces "Prawnstars MTG".
+- "Prawnstars" stays the name of the friend group: the pod, its tables ("Prawnstars Pod") and the pod deck shelf.
+- Concept: the club is the pod's local. Voice of a members' club or pub: "On tonight" for tables, "house decks" for ready-made decks (Tal liked the pub angle, 2026-11-26).
+- Look: clean and modern, after Tal's reference theonyxla.com: white page, near-black rounded panels, one sans, pill buttons, hairlines; no pub textures or ornament (Tal, 2026-11-26).
+- Tone: cheeky but classy. The one deliberate exception: a penis-shaped cursor, on by default for everyone; the pod agreed to it (Tal, 2026-11-26). Keep an off switch in Settings.
+- Earlier commitment kept: the logo is colorful and bright.
 - Personal hobby for friends; not a business, no marketing claims.
 
 ## Evidence on Hand

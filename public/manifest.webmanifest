@@ -1,12 +1,12 @@
 {
-  "name": "Prawnstars MTG",
-  "short_name": "Prawnstars",
+  "name": "The Cock Magic Club",
+  "short_name": "Cock Magic",
   "description": "The Prawnstars pod's private Magic: The Gathering table.",
   "start_url": "/companion",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#1A1030",
-  "theme_color": "#1A1030",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
   "categories": ["games"],
   "icons": [
     {
