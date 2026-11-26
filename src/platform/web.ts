@@ -76,6 +76,7 @@ import {
 } from "@/lib/spawnedBots";
 import { isPromptLoggingEnabled } from "@/lib/debugPrompts";
 import { applyStateDelta, diffStateDelta } from "@/lib/stateDelta";
+import { deliverVoiceSignal, isVoiceSignal, setVoiceSignalSender } from "@/lib/voice/voiceSignals";
 import {
   WebRtcPlane,
   iceServersFrom,
@@ -2176,6 +2177,12 @@ class WebServerApi implements IServerApi {
         Array.isArray(msg.features) && (msg.features as string[]).includes("room_transport");
       this.planeQualityReporting =
         Array.isArray(msg.features) && (msg.features as string[]).includes("plane_quality");
+      // Voice chat reuses the relay's peer-signal route; see lib/voice/voiceSignals.ts.
+      setVoiceSignalSender(
+        this.peerSignalling
+          ? (to, payload) => this.send({ type: "SignalPeer", to, payload })
+          : null,
+      );
     }
     if (DEBUG_TRANSPORT) console.log("[transport←ws] received:", JSON.stringify(msg));
     if (isPromptLoggingEnabled()) {
@@ -2222,6 +2229,10 @@ class WebServerApi implements IServerApi {
       return;
     }
     if (type === "PeerSignal") {
+      if (isVoiceSignal(msg.payload)) {
+        deliverVoiceSignal(String(msg.from ?? ""), msg.payload);
+        return;
+      }
       void this.webrtc?.onSignal(String(msg.from ?? ""), msg.payload);
       return;
     }

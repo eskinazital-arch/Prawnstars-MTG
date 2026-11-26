@@ -7,6 +7,7 @@ import { DebugLogOverlay } from "@/components/dev/DebugLogOverlay";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppInitGate } from "@/components/AppInitGate";
 import { SignInDialog } from "@/components/auth/SignInDialog";
+import { VoiceChatBar } from "@/components/voice/VoiceChatBar";
 import { useApplyTheme, useThemePreviewMode } from "@/hooks/useTheme";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { useGameDevStore } from "@/stores/useGameDevStore";
@@ -94,6 +95,7 @@ function LocalizedApplication({ devToolsEnabled }: { devToolsEnabled: boolean })
           </AppInitGate>
           {isFeatureEnabled("accounts") && <SignInDialog />}
           <Toaster />
+          <VoiceChatBar />
           {import.meta.env.VITE_STAGING_TOOLS === "1" && <DebugLogOverlay />}
           {import.meta.env.DEV && devToolsEnabled && (
             <Suspense>

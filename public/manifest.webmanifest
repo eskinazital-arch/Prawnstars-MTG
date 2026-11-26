@@ -1,12 +1,12 @@
 {
-  "name": "Manabrew",
-  "short_name": "Manabrew",
-  "description": "Magic: The Gathering client and paper-play life tracker.",
+  "name": "Prawnstars MTG",
+  "short_name": "Prawnstars",
+  "description": "The Prawnstars pod's private Magic: The Gathering table.",
   "start_url": "/companion",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#1C191D",
-  "theme_color": "#1C191D",
+  "background_color": "#1A1030",
+  "theme_color": "#1A1030",
   "categories": ["games"],
   "icons": [
     {

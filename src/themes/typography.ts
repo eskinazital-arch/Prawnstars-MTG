@@ -1,5 +1,6 @@
-export const UI_FONT_FAMILY = '"Source Sans 3 Variable", system-ui, -apple-system, sans-serif';
-export const DISPLAY_FONT_FAMILY = '"Alegreya Sans", system-ui, -apple-system, sans-serif';
+export const UI_FONT_FAMILY = '"Figtree Variable", system-ui, -apple-system, sans-serif';
+export const DISPLAY_FONT_FAMILY =
+  '"Bricolage Grotesque Variable", system-ui, -apple-system, sans-serif';
 
 export type UiTextRole = "body" | "label" | "meta" | "caption" | "input";
 

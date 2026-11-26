@@ -16,9 +16,8 @@ import { RoomInviteOverlay } from "@/components/lobby/RoomInviteOverlay";
 import { IronsmithUnsupportedDeckModal } from "@/components/IronsmithUnsupportedDeckModal";
 import { GuestNameConflictModal } from "@/components/GuestNameConflictModal";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { BreweryBackdrop } from "@/components/BreweryBackdrop";
-import { TermsNotice } from "@/components/TermsNotice";
 import { StatusBanner } from "./StatusBanner";
+import { AppRail } from "./AppRail";
 import { TopBar } from "./TopBar";
 import { TopBarOverrideContext, type TopBarOverride } from "./TopBarOverride";
 import { useStatusBanner } from "@/hooks/useStatusBanner";
@@ -64,14 +63,6 @@ export function AppShell() {
     pathname.startsWith(ROUTES.WINSTON) ||
     pathname.startsWith(ROUTES.GAUNTLET);
   const isImmersiveRoute = isGameRoute || isCompanionRoute || isLimitedTableRoute;
-  const isPlayHome = pathname === ROUTES.PLAY;
-  const usesSubtleBackdrop =
-    pathname.startsWith(ROUTES.SEARCH) ||
-    pathname.startsWith(ROUTES.DECK_EDITOR) ||
-    pathname.startsWith(ROUTES.MY_COLLECTION) ||
-    pathname.startsWith(ROUTES.HUB) ||
-    pathname.startsWith(ROUTES.DESIGN_SYSTEM) ||
-    pathname === "/card-mock";
   const hideNavChrome = isGameRoute;
   const activeTopBarOverride =
     topBarOverride?.locationKey === location.key &&
@@ -144,31 +135,27 @@ export function AppShell() {
 
   return (
     <TopBarOverrideContext.Provider value={setTopBarOverride}>
-      <div className="h-[100dvh] overflow-hidden flex flex-col">
-        <StatusBanner />
-        <KeyboardShortcutsDialog open={shortcutsOpen} onOpenChange={setShortcutsOpen} />
-        <IronsmithUnsupportedDeckModal />
-        {accountsEnabled && <GuestNameConflictModal />}
-        <RoomInviteOverlay />
-        {!hideNavChrome && <TopBar override={activeTopBarOverride} />}
-        <main
-          className={cn(
-            "relative isolate flex-1 min-h-0 overflow-auto",
-            !isImmersiveRoute &&
-              "pb-[var(--safe-area-inset-bottom)] pl-[var(--safe-area-inset-left)] pr-[var(--safe-area-inset-right)]",
-            isImmersiveRoute && "!p-0 !overflow-hidden",
-          )}
-        >
-          {!isImmersiveRoute && (
-            <BreweryBackdrop
-              variant={isPlayHome ? "hero" : usesSubtleBackdrop ? "subtle" : "ambient"}
-              className="-z-10"
-            />
-          )}
-          {/* Play cancels in-flight launches on unmount, so keep the outlet stable here. */}
-          <Outlet />
-        </main>
-        {!isImmersiveRoute && <TermsNotice />}
+      <div className="h-[100dvh] overflow-hidden flex">
+        {!hideNavChrome && <AppRail />}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <StatusBanner />
+          <KeyboardShortcutsDialog open={shortcutsOpen} onOpenChange={setShortcutsOpen} />
+          <IronsmithUnsupportedDeckModal />
+          {accountsEnabled && <GuestNameConflictModal />}
+          <RoomInviteOverlay />
+          {!hideNavChrome && <TopBar override={activeTopBarOverride} />}
+          <main
+            className={cn(
+              "relative isolate flex-1 min-h-0 overflow-auto",
+              !isImmersiveRoute &&
+                "pb-[var(--safe-area-inset-bottom)] pl-[var(--safe-area-inset-left)] pr-[var(--safe-area-inset-right)]",
+              isImmersiveRoute && "!p-0 !overflow-hidden",
+            )}
+          >
+            {/* Play cancels in-flight launches on unmount, so keep the outlet stable here. */}
+            <Outlet />
+          </main>
+        </div>
       </div>
     </TopBarOverrideContext.Provider>
   );
