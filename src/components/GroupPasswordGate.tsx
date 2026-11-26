@@ -4,6 +4,8 @@ import { ClubMark } from "@/components/layout/ClubMark";
 import { groupPasswordRequired } from "@/config/knownRelays";
 import { clearGroupKey, getGroupKey, isGroupKeyRejection, setGroupKey } from "@/lib/groupKey";
 import { useServerStore } from "@/stores/useServerStore";
+import { usePodDecksStore } from "@/stores/usePodDecksStore";
+import { memberFromKey } from "@/lib/podMembers";
 
 const REJECTED_FLAG = "prawnstars.groupKeyRejected";
 
@@ -40,6 +42,9 @@ function GroupPasswordScreen() {
     event.preventDefault();
     if (!value.trim()) return;
     setGroupKey(value);
+    // A member password says who you are; the relay signs you in under it.
+    const member = memberFromKey(value);
+    if (member) usePodDecksStore.setState({ me: member });
     // The relay connection reads the key at start-up.
     window.location.reload();
   }
@@ -56,11 +61,11 @@ function GroupPasswordScreen() {
             The Cock Magic Club
           </h1>
           <p className="mb-8 mt-4 text-ui-body text-[#bdbdbd]">
-            The Prawnstars pod drinks here. Give the door the group password; this browser will
-            remember you after that.
+            The Prawnstars pod drinks here. Give the door your own member password; this browser
+            will remember you after that.
           </p>
           <label htmlFor="group-password" className="mb-2 block text-ui-label font-medium">
-            Group password
+            Your password
           </label>
           <input
             id="group-password"

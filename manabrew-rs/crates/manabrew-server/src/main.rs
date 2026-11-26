@@ -102,7 +102,8 @@ async fn main() {
         )
         .with_art_base_url(config.art_base_url.clone())
         .with_direct_transport(config.direct_transport, config.ice_servers.clone())
-        .with_guest_lobby_chat(config.guest_lobby_chat),
+        .with_guest_lobby_chat(config.guest_lobby_chat)
+        .with_member_keys(config.member_keys.clone()),
     );
 
     // Serving art is the reason to run a relay of your own: one machine holds

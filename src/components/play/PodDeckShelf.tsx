@@ -5,6 +5,8 @@ import { DECK_SHELF_CARD_CLASS, DeckShelfRow } from "@/components/play/DeckShelf
 import { AppSelect, AppSelectOption } from "@/components/ui/AppSelect";
 import { podDeckKey, podOwners, type PodDeck } from "@/lib/podDecks";
 import { startPodDeckSync, usePodDecksStore } from "@/stores/usePodDecksStore";
+import { getGroupKey } from "@/lib/groupKey";
+import { memberDisplayName, memberFromKey } from "@/lib/podMembers";
 
 interface PodDeckShelfProps {
   pendingDeckId: string | null;
@@ -34,32 +36,41 @@ export function PodDeckShelf({ pendingDeckId, onOpenSavedDeck, onPlayDeck }: Pod
       open={open}
       onOpenChange={setOpen}
     >
-      <div className="mb-4 flex flex-wrap items-center gap-2 px-2">
-        <label htmlFor="pod-me" className="text-ui-label font-medium">
-          {`I'm`}
-        </label>
-        <AppSelect
-          id="pod-me"
-          value={me ?? ""}
-          onValueChange={(value) => setMe(value || null)}
-          className="touch:min-h-11 min-h-9 cursor-pointer rounded-md border bg-background px-2 text-ui-label"
-        >
-          <AppSelectOption value="">Pick your name</AppSelectOption>
-          {owners.map((owner) => (
-            <AppSelectOption key={owner} value={owner}>
-              {owner}
-            </AppSelectOption>
-          ))}
-        </AppSelect>
-        <span className="text-ui-meta text-muted-foreground">
-          {me
-            ? `Your decks are on your shelf and stay in sync with the pod.`
-            : `Pick your name and your decks land on your shelf, ready to play.`}
-        </span>
-      </div>
+      {memberFromKey(getGroupKey()) ? (
+        <p className="mb-4 px-2 text-ui-meta text-muted-foreground">
+          {`You came in as ${memberDisplayName(me ?? "")}. Your decks are on your shelf and stay in sync with the pod.`}
+        </p>
+      ) : (
+        <div className="mb-4 flex flex-wrap items-center gap-2 px-2">
+          <label htmlFor="pod-me" className="text-ui-label font-medium">
+            {`I'm`}
+          </label>
+          <AppSelect
+            id="pod-me"
+            value={me ?? ""}
+            onValueChange={(value) => setMe(value || null)}
+            className="touch:min-h-11 min-h-9 cursor-pointer rounded-md border bg-background px-2 text-ui-label"
+          >
+            <AppSelectOption value="">Pick your name</AppSelectOption>
+            {owners.map((owner) => (
+              <AppSelectOption key={owner} value={owner}>
+                {memberDisplayName(owner)}
+              </AppSelectOption>
+            ))}
+          </AppSelect>
+          <span className="text-ui-meta text-muted-foreground">
+            {me
+              ? `Your decks are on your shelf and stay in sync with the pod.`
+              : `Pick your name and your decks land on your shelf, ready to play.`}
+          </span>
+        </div>
+      )}
       <div className="space-y-4">
         {orderedOwners.map((owner) => (
-          <DeckShelfRow key={owner} label={owner === me ? `${owner} (you)` : owner}>
+          <DeckShelfRow
+            key={owner}
+            label={owner === me ? `${memberDisplayName(owner)} (you)` : memberDisplayName(owner)}
+          >
             {decks
               .filter((deck) => deck.owner === owner)
               .map((deck) => {
@@ -70,7 +81,7 @@ export function PodDeckShelf({ pendingDeckId, onOpenSavedDeck, onPlayDeck }: Pod
                       deck={{ id, deck, savedAt: 0 }}
                       onOpen={() => onOpenSavedDeck(addToMyDecks(deck))}
                       onPlay={() => onPlayDeck(deck)}
-                      badge={owner === me ? `Your deck` : `${owner}'s deck`}
+                      badge={owner === me ? `Your deck` : `${memberDisplayName(owner)}'s deck`}
                       engines={deck.engines}
                       playing={pendingDeckId === id}
                       playDisabled={pendingDeckId !== null}

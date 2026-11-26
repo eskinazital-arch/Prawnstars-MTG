@@ -1,7 +1,7 @@
-// The Prawnstars group password. It is the relay's server key
-// (MANABREW_SERVER_KEY on the relay): a deployment that does not publish the
-// key in its config makes every player enter it once, and nobody without it
-// can connect to the pod's tables. Stored per browser.
+// The password a browser came in with: a member's own password (see
+// podMembers.ts) or the relay's shared server key (MANABREW_SERVER_KEY). A
+// deployment that does not publish the server key makes every player enter
+// one once; nobody without one can reach the pod's tables. Stored per browser.
 const STORAGE_KEY = "prawnstars.groupKey";
 
 export function getGroupKey(): string | null {

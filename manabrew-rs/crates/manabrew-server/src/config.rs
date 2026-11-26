@@ -60,6 +60,10 @@ pub struct ServerConfig {
     /// Opt-in. Lets players without an account post in lobby chat. For a
     /// private relay whose server key already limits who can connect.
     pub guest_lobby_chat: bool,
+    /// Per-member passwords, `MANABREW_MEMBER_KEYS="key=Name,key=Name"`. A
+    /// member key is accepted in place of the server key and signs the player
+    /// in under that member's name; nobody else may use a member name.
+    pub member_keys: Vec<(String, String)>,
     /// ICE servers handed to the browser plane. See [`parse_ice_servers`].
     pub ice_servers: Vec<TransportIceServer>,
     /// Where this relay keeps card art. Set it and the relay serves
@@ -135,6 +139,10 @@ impl ServerConfig {
                 .is_ok_and(|v| v == "1" || v.eq_ignore_ascii_case("true")),
             guest_lobby_chat: std::env::var("MANABREW_GUEST_LOBBY_CHAT")
                 .is_ok_and(|v| v == "1" || v.eq_ignore_ascii_case("true")),
+            member_keys: std::env::var("MANABREW_MEMBER_KEYS")
+                .ok()
+                .map(|raw| parse_member_keys(&raw))
+                .unwrap_or_default(),
             ice_servers: std::env::var("MANABREW_ICE_SERVERS")
                 .ok()
                 .map(|raw| parse_ice_servers(&raw))
@@ -161,6 +169,16 @@ impl ServerConfig {
 /// A desktop that found this relay over mDNS logs in with the LAN key and is
 /// never told another. A relay that advertises and kept the old default turned
 /// every one of them away with "Invalid server key".
+pub fn parse_member_keys(raw: &str) -> Vec<(String, String)> {
+    raw.split(',')
+        .filter_map(|pair| {
+            let (key, name) = pair.split_once('=')?;
+            let (key, name) = (key.trim().to_lowercase(), name.trim().to_string());
+            (!key.is_empty() && !name.is_empty()).then_some((key, name))
+        })
+        .collect()
+}
+
 fn default_server_key(lan_advertise: bool) -> &'static str {
     if lan_advertise {
         manabrew_lan_discovery::LAN_RELAY_KEY

@@ -8,6 +8,7 @@ import { useQuickPlay } from "@/hooks/useQuickPlay";
 import { peekActiveGameSession } from "@/lib/activeGameSession";
 import { ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { memberDisplayName } from "@/lib/podMembers";
 import { relayUsername } from "@/lib/relayUsername";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -196,7 +197,7 @@ export function PlayHome() {
             <div className="min-w-0">
               <h1 className="text-5xl font-light leading-[1.02] tracking-[-0.05em] text-balance sm:text-6xl">
                 {greeting()}
-                {podMe ? `, ${podMe}.` : `.`}
+                {podMe ? `, ${memberDisplayName(podMe)}.` : `.`}
               </h1>
               <p className="mt-4 max-w-xl text-ui-body text-[#bdbdbd]">{heroDetail}</p>
             </div>

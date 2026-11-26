@@ -6,7 +6,7 @@ import { stripUsernameTag } from "@/lib/username";
 import { cn } from "@/lib/utils";
 import type { RoomPlayerInfo } from "@/types/server";
 function seatInitials(username: string) {
-  return stripUsernameTag(username).slice(0, 2).toUpperCase();
+  return (stripUsernameTag(username).trim().split(/ +/).pop() ?? "").slice(0, 2).toUpperCase();
 }
 interface TableSeatChipProps {
   seatIndex: number;

@@ -40,6 +40,14 @@ if (-not (Test-Path $Secrets)) {
 . $Secrets
 if (-not $GroupPassword) { throw "Set `$GroupPassword in $Secrets" }
 
+# Each pod member signs in with their own password, cuck-<first name>, and the
+# relay seats them as "Cuckold <Name>". Keep this list in step with
+# src/lib/podMembers.ts. Set $MemberKeys in secrets.local.ps1 to override.
+if (-not $MemberKeys) {
+  $MemberKeys = (@("Tal", "Eden", "Dante", "Mitchell", "Jackson", "Dillon") |
+    ForEach-Object { "cuck-$($_.ToLower())=Cuckold $_" }) -join ","
+}
+
 $Dist = Join-Path $Repo "dist"
 if (-not (Test-Path (Join-Path $Dist "index.html"))) { throw "No build found. Run 'yarn build:web' in $Repo first." }
 Copy-Item (Join-Path $Here "config.js") (Join-Path $Dist "config.js") -Force
@@ -63,6 +71,7 @@ Start-Part "relay" (Join-Path $Bin "manabrew-server.exe") @() @{
   FORGE_HOST = "127.0.0.1"; FORGE_PORT = "9443"; FORGE_HEALTH_PORT = "9444"
   MANABREW_SERVER_KEY = $GroupPassword
   MANABREW_DIRECT_TRANSPORT = "1"; MANABREW_GUEST_LOBBY_CHAT = "1"
+  MANABREW_MEMBER_KEYS = $MemberKeys
   MANABREW_ICE_SERVERS = "stun:stun.l.google.com:19302"
   RUST_LOG = "manabrew_server=info"
 }

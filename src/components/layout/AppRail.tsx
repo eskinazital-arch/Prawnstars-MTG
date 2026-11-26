@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { usePodDecksStore } from "@/stores/usePodDecksStore";
+import { memberDisplayName } from "@/lib/podMembers";
 import { ClubMark } from "./ClubMark";
 import { isNavDestinationActive } from "./navDestinations";
 
@@ -84,7 +85,7 @@ export function AppRail({ disabled = false }: { disabled?: boolean }) {
         <div className="mt-auto border-t border-[#303030] px-2 pt-4 text-ui-meta text-[#8c8c8c]">
           {podMe ? `Drinking with` : `You are`}
           <b className="block truncate text-ui-label font-medium text-white">
-            {podMe ?? `a guest, pick your name on Home`}
+            {podMe ? memberDisplayName(podMe) : `a guest, pick your name on Home`}
           </b>
         </div>
       </nav>

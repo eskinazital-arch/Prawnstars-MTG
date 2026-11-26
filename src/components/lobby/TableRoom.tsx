@@ -8,6 +8,7 @@ import { InvitePlayersDialog } from "@/components/lobby/InvitePlayersDialog";
 import { Button } from "@/components/ui/button";
 import { RELAY_FEATURE, type GameFormat, type RoomInfo } from "@/types/server";
 import { useServerStore } from "@/stores/useServerStore";
+import { stripUsernameTag } from "@/lib/username";
 import type { TableRoomDeckSelection } from "./tableRoom.types";
 interface TableRoomProps {
   room: RoomInfo;
@@ -88,6 +89,40 @@ export function TableRoom({
     : room.sealed_config
       ? (room.sealed_config.cube_name ?? room.sealed_config.set_code ?? `Sealed`)
       : room.format;
+  // One plain sentence naming who the start is waiting on, so nobody has to
+  // work out why Start is greyed out.
+  function nameList(names: string[]): string {
+    const shown = names.map((name) => (name === username ? `you` : stripUsernameTag(name)));
+    if (shown.length <= 1) return shown.join(``);
+    return `${shown.slice(0, -1).join(`, `)} and ${shown[shown.length - 1]}`;
+  }
+  const humans = room.players.filter((player) => !player.is_bot);
+  const offline = humans.filter((player) => !player.connected).map((player) => player.username);
+  const deckless = isOpenFormat
+    ? []
+    : room.players.filter((player) => !player.selected_deck_name).map((player) => player.username);
+  const notReady = humans
+    .filter((player) => player.username !== controllerName && !player.ready)
+    .filter((player) => !deckless.includes(player.username))
+    .map((player) => player.username);
+  const waitingOn: string | null =
+    room.status !== "Lobby"
+      ? null
+      : needsFormat
+        ? `Waiting on ${controllerName === username ? `you` : stripUsernameTag(controllerName ?? `the host`)} to choose a format.`
+        : requiredPlayers > 0
+          ? `Waiting for ${requiredPlayers} more ${requiredPlayers === 1 ? `player` : `players`} to sit down.`
+          : offline.length > 0
+            ? `Waiting on ${nameList(offline)} to reconnect.`
+            : deckless.length > 0
+              ? `Waiting on ${nameList(deckless)} to pick a deck.`
+              : notReady.length > 0
+                ? `Waiting on ${nameList(notReady)} to ready up.`
+                : autoStart
+                  ? `Everyone is ready. Starting now.`
+                  : isController
+                    ? `Everyone is ready. Start when you like.`
+                    : `Everyone is ready. Waiting on ${stripUsernameTag(controllerName ?? `the host`)} to start.`;
   const canChooseDeck = !isOpenFormat && room.status === "Lobby" && !!deckSelection;
   const onInvitePlayer =
     room.status === "Lobby" && openSeats > 0 && invitesEnabled
@@ -136,9 +171,7 @@ export function TableRoom({
           <div>
             <p className="text-ui-label font-medium text-primary">You're ready</p>
             <p className="text-ui-meta text-muted-foreground">
-              {autoStart
-                ? "Starting automatically once the table is full and everyone is ready."
-                : "Waiting for the host to start."}
+              You can unready until the game starts.
             </p>
           </div>
           <button
@@ -192,16 +225,15 @@ export function TableRoom({
       );
     }
     return (
-      <div className="rounded-lg border border-border/60 bg-muted/30 px-4 py-2.5 text-center sm:text-right">
-        <p className="text-ui-label font-medium">
-          {requiredPlayers > 0 ? `Waiting for ${requiredPlayers} more` : `Waiting for players`}
-        </p>
-        <p className="text-ui-meta text-muted-foreground">
-          {requiredPlayers > 0
-            ? `Your table is open for others to join.`
-            : `Everyone at the table needs to be ready.`}
-        </p>
-      </div>
+      <Button
+        variant="primary"
+        size="lg"
+        disabled
+        title={waitingOn ?? undefined}
+        className="w-full sm:w-auto"
+      >
+        <Swords /> {isController ? `Start game` : `Ready up`}
+      </Button>
     );
   }
   return (
@@ -243,7 +275,7 @@ export function TableRoom({
                     {modeLabel}
                   </span>
                   <span className="text-ui-meta font-medium text-muted-foreground">
-                    {readyCount}/{room.players.length} ready
+                    {readyCount} of {room.players.length} ready
                   </span>
                 </span>
               }
@@ -255,37 +287,47 @@ export function TableRoom({
             </p>
           )}
         </div>
+        {waitingOn && (
+          <p
+            role="status"
+            className="border-t px-4 py-2.5 text-center text-ui-label text-muted-foreground sm:px-6"
+          >
+            {waitingOn}
+          </p>
+        )}
         <footer className="flex shrink-0 flex-col gap-4 border-t px-4 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-6">
-          {canChooseDeck ? (
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => username && deckSelection?.onSelectSeat(username)}
-              disabled={deckSelection?.busy}
-              className="w-full min-w-0 sm:w-auto sm:max-w-sm"
-            >
-              <LibraryBig />
-              <span className="truncate">{myPlayer?.selected_deck_name ?? "Choose deck"}</span>
-            </Button>
-          ) : (
-            <div className="min-w-0 sm:flex-1">
-              <span className="block text-ui-meta text-muted-foreground">Your deck</span>
-              <span className="block truncate text-ui-label font-medium">
-                {isOpenFormat
-                  ? "Ready when you are"
-                  : (myPlayer?.selected_deck_name ?? "Choose your deck")}
-              </span>
-            </div>
-          )}
-          <div className="flex flex-wrap items-center justify-end gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-3 sm:flex-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={onLeaveRoom}
-              className="text-muted-foreground hover:text-destructive"
+              className="order-last text-muted-foreground hover:text-destructive sm:order-none"
             >
               <LogOut /> Leave table
             </Button>
+            {canChooseDeck ? (
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => username && deckSelection?.onSelectSeat(username)}
+                disabled={deckSelection?.busy}
+                className="w-full min-w-0 sm:w-auto sm:max-w-sm"
+              >
+                <LibraryBig />
+                <span className="truncate">{myPlayer?.selected_deck_name ?? "Choose deck"}</span>
+              </Button>
+            ) : (
+              <div className="min-w-0 sm:flex-1">
+                <span className="block text-ui-meta text-muted-foreground">Your deck</span>
+                <span className="block truncate text-ui-label font-medium">
+                  {isOpenFormat
+                    ? "Ready when you are"
+                    : (myPlayer?.selected_deck_name ?? "Choose your deck")}
+                </span>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center justify-end gap-2">
             {renderPrimaryAction()}
           </div>
         </footer>

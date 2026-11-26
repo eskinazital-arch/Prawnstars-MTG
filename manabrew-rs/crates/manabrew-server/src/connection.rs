@@ -1330,7 +1330,8 @@ async fn authenticate(
             client.acquisition_source = acquisition_source
                 .as_deref()
                 .map(crate::client_build::acquisition_source);
-            if password != state.server_key {
+            let member = state.member_for_key(&password);
+            if member.is_none() && password != state.server_key {
                 let reply = ServerMessage::AuthResult {
                     success: false,
                     player_id: None,
@@ -1360,10 +1361,29 @@ async fn authenticate(
                 return Err(ServerError::AuthFailed("identity token expired".into()));
             }
             let identities = resolved.identities;
-            let name_verified = resolved.name_verified;
+            let name_verified = resolved.name_verified || member.is_some();
             let qualification = resolved.qualification;
             let avatar_url = resolved.avatar_url;
-            let username = resolved.name.unwrap_or(username);
+            // A member keeps the client's own `@1234` tag so the app still
+            // recognises its seat, but the name in front is always theirs.
+            let username = match &member {
+                Some(name) => format!("{name}{}", crate::state::split_name_tag(username.trim()).1),
+                None => resolved.name.unwrap_or(username),
+            };
+            if member.is_none() && state.is_member_name(&username) {
+                let reply = ServerMessage::AuthResult {
+                    success: false,
+                    player_id: None,
+                    reconnected: None,
+                    error: Some(format!(
+                        "'{username}' is a member name; sign in with its password"
+                    )),
+                    features: advertised_features(state),
+                    art_base_url: state.art_base_url.clone(),
+                };
+                send_msg(sender, &reply);
+                return Err(ServerError::DuplicateUsername(username));
+            }
 
             if username.trim().is_empty() {
                 let reply = ServerMessage::AuthResult {

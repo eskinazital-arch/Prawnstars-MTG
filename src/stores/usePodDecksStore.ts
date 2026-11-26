@@ -1,17 +1,20 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { reserveGuestName } from "@/lib/guestName";
+import { getGroupKey } from "@/lib/groupKey";
+import { memberDisplayName, memberFromKey } from "@/lib/podMembers";
 import { loadPodDecks, podDeckKey, type PodDeck } from "@/lib/podDecks";
 import { useDeckStore } from "@/stores/useDeckStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 
 /**
  * The pod name doubles as this player's name on the relay, so seats, the
- * player list and chat show "Tal" rather than a generated handle.
+ * player list and chat show "Cuckold Tal" rather than a generated handle.
  */
 function applyRelayName(owner: string): void {
-  if (usePreferencesStore.getState().serverUsername === owner) return;
-  void reserveGuestName(owner).catch((err) => {
+  const name = memberDisplayName(owner);
+  if (usePreferencesStore.getState().serverUsername === name) return;
+  void reserveGuestName(name).catch((err) => {
     console.warn("[PodDecks] could not use the pod name on the relay:", err);
   });
 }
@@ -101,6 +104,12 @@ export const usePodDecksStore = create<PodDecksState>()(
 
 /** Loads the pod shelf and keeps this player's decks synced once My Decks is ready. */
 export function startPodDeckSync(): () => void {
+  // A member password decides who you are; the shelf picker is only for
+  // browsers that came in on the shared server key.
+  const keyMember = memberFromKey(getGroupKey());
+  if (keyMember && usePodDecksStore.getState().me !== keyMember) {
+    usePodDecksStore.setState({ me: keyMember });
+  }
   const me = usePodDecksStore.getState().me;
   if (me) applyRelayName(me);
   void usePodDecksStore.getState().prefetch();
