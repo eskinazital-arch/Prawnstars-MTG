@@ -1,38 +1,62 @@
-import logoSpriteUrl from "/images/brand/logos/interactive/manabrew-logo.svg";
-import geometry from "@/assets/brandLogoGeometry.json";
-import { useTheme as useColorMode } from "next-themes";
-import { useThemePreviewMode } from "@/hooks/useTheme";
 import { cn } from "@/lib/utils";
-import "./ManaBrewLogo.css";
+import { PrawnMarkPaths } from "./PrawnMark";
 
+// Kept under its upstream name so every existing usage (top bar, loading gate,
+// design-system pages) shows the Prawnstars logo without further edits.
 export function ManaBrewLogo({
   variant = "horizontal",
   height = 56,
   className,
   decorative = false,
 }: {
-  variant?: "horizontal" | "symbol";
+  variant?: "horizontal" | "symbol" | "wordmark";
   height?: number;
   className?: string;
   decorative?: boolean;
 }) {
-  const { resolvedTheme } = useColorMode();
-  const previewMode = useThemePreviewMode();
-  const mode = (previewMode ?? resolvedTheme) === "light" ? "light" : "dark";
-  const dimensions = geometry[variant][mode];
+  const label = decorative ? undefined : "Prawnstars MTG";
+  if (variant === "symbol") {
+    return (
+      <svg
+        viewBox="0 0 64 64"
+        width={height}
+        height={height}
+        className={cn("h-auto max-w-full", className)}
+        role={decorative ? undefined : "img"}
+        aria-label={label}
+        aria-hidden={decorative || undefined}
+        focusable="false"
+      >
+        <PrawnMarkPaths />
+      </svg>
+    );
+  }
+  const withMark = variant === "horizontal";
   return (
-    <svg
-      viewBox={dimensions.viewBox}
-      width={(height * dimensions.width) / dimensions.height}
-      height={height}
-      className={cn("mb-logo h-auto max-w-full", className)}
-      data-mode={mode}
+    <span
+      className={cn("inline-flex shrink-0 items-center gap-2 leading-none", className)}
       role={decorative ? undefined : "img"}
-      aria-label={decorative ? undefined : "Manabrew"}
+      aria-label={label}
       aria-hidden={decorative || undefined}
-      focusable="false"
+      style={{ height }}
     >
-      <use href={`${logoSpriteUrl}#mb-${variant}-${mode}`} />
-    </svg>
+      {withMark && (
+        <svg
+          viewBox="0 0 64 64"
+          width={height * 0.82}
+          height={height * 0.82}
+          aria-hidden="true"
+          focusable="false"
+        >
+          <PrawnMarkPaths />
+        </svg>
+      )}
+      <span
+        className="font-serif font-extrabold tracking-[-0.01em] text-foreground"
+        style={{ fontSize: height * 0.46 }}
+      >
+        Prawnstars <span className="text-primary">MTG</span>
+      </span>
+    </span>
   );
 }

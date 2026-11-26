@@ -1,16 +1,11 @@
-import { LibraryBig, Swords, Users } from "lucide-react";
+import { ArrowRight, PackageOpen, Swords, Users } from "lucide-react";
+import type { ComponentType } from "react";
 import { useEffect, useState } from "react";
-import multiplayerArt from "@/assets/double-players4.webp";
-import singlePlayerArt from "@/assets/single-player2.webp";
+import { useNavigate } from "react-router-dom";
 import { UpdateCallout } from "@/components/layout/UpdateCallout";
-import { FeatureTile } from "@/components/play/FeatureTile";
-import { GuestNudge } from "@/components/play/GuestNudge";
 import { PlayDeckShelf } from "@/components/play/PlayDeckShelf";
-import { PlayHomeLinks } from "@/components/play/PlayHomeLinks";
 import { RejoinMatchCard } from "@/components/play/RejoinMatchCard";
-import { isFeatureEnabled } from "@/featureFlags";
 import { useQuickPlay } from "@/hooks/useQuickPlay";
-import { useIsShortScreen } from "@/hooks/useBreakpoints";
 import { peekActiveGameSession } from "@/lib/activeGameSession";
 import { ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -18,29 +13,79 @@ import { relayUsername } from "@/lib/relayUsername";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useServerStore } from "@/stores/useServerStore";
-const MODES = [
-  {
-    to: ROUTES.PLAY_OFFLINE_CONSTRUCTED,
-    label: `Singleplayer`,
-    desc: "Choose your decks and play against the AI at your own pace.",
-    icon: Swords,
-    image: singlePlayerArt,
-    imageClassName: "h-52 w-52 -mr-3",
-    tone: "primary",
-  },
-  {
-    to: ROUTES.LOBBY,
-    label: `Multiplayer`,
-    desc: "Join an open table or create a room for your group.",
-    icon: Users,
-    image: multiplayerArt,
-    imageClassName: "h-40 w-40 sm:h-82 sm:w-82 lg:h-80 lg:w-80 -mb-4",
-    tone: "secondary",
-  },
-];
+import type { RoomInfo } from "@/types/server";
+
+type WrapperTone = "pink" | "teal" | "violet";
+
+const WRAPPER_TONE: Record<WrapperTone, string> = {
+  pink: "bg-primary text-primary-foreground",
+  teal: "bg-brand-accent text-background",
+  violet: "bg-secondary text-background",
+};
+
+/** A booster-wrapper tile: one bright colour per way into the game, crimped on top. */
+function WrapperTile({
+  tone,
+  title,
+  detail,
+  action,
+  icon: Icon,
+  onClick,
+  wide = false,
+}: {
+  tone: WrapperTone;
+  title: string;
+  detail: string;
+  action: string;
+  icon: ComponentType<{ className?: string }>;
+  onClick: () => void;
+  wide?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "crimp-top group relative flex min-h-48 flex-col justify-between rounded-b-2xl rounded-t-md px-6 pb-5 pt-8 text-left shadow-[0_10px_24px_-14px_rgb(0_0_0/0.7)] motion-safe:transition-transform motion-safe:hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        WRAPPER_TONE[tone],
+        wide && "md:col-span-2 xl:col-span-1",
+      )}
+    >
+      <div>
+        <Icon className="mb-3 h-6 w-6 opacity-80" />
+        <h2 className="font-serif text-3xl font-extrabold leading-none tracking-[-0.01em]">
+          {title}
+        </h2>
+        <p className="mt-2 text-ui-body font-semibold opacity-80">{detail}</p>
+      </div>
+      <span className="mt-5 inline-flex items-center gap-2 self-start rounded-full bg-background px-4 py-2 text-ui-label font-semibold text-foreground motion-safe:transition-[gap] group-hover:gap-3">
+        {action}
+        <ArrowRight className="h-4 w-4" />
+      </span>
+    </button>
+  );
+}
+
+function SeatDots({ room }: { room: RoomInfo }) {
+  const seated = room.players.filter((player) => !player.is_bot).length;
+  return (
+    <span className="flex gap-1" aria-label={`${seated} of ${room.max_players} seats taken`}>
+      {Array.from({ length: room.max_players }, (_, index) => (
+        <span
+          key={index}
+          className={cn(
+            "h-5 w-5 rounded-full border",
+            index < seated ? "border-primary bg-primary" : "border-border bg-card",
+          )}
+        />
+      ))}
+    </span>
+  );
+}
+
 export function PlayHome() {
+  const navigate = useNavigate();
   const { quickPlay, quickPlayPreset, quickPlayCommunity, pendingDeckId } = useQuickPlay();
-  const compact = useIsShortScreen();
   const [resumeSession, setResumeSession] = useState(peekActiveGameSession);
   const resumePending = resumeSession !== null;
   const connected = useServerStore((state) => state.connected);
@@ -56,19 +101,16 @@ export function PlayHome() {
   const accountHandle = useAuthStore((s) =>
     s.status === "signedIn" ? (s.account?.handle ?? null) : null,
   );
-  const openTables = rooms.filter(
-    (room) => room.status === "Lobby" && room.engine !== "Manabrew",
-  ).length;
-  const searching = players.filter((player) => (player.searching_brackets?.length ?? 0) > 0).length;
-  const lobbyTeaser =
-    connected && (openTables > 0 || players.length > 0)
-      ? [
-          `${openTables} ${openTables === 1 ? "table" : "tables"} open`,
-          `${players.length} online`,
-          ...(searching > 0 ? [`${searching} finding a match`] : []),
-        ].join(" · ")
-      : null;
-  const communityEnabled = isFeatureEnabled("deckHub");
+  const openRooms = rooms.filter((room) => room.status === "Lobby" && room.engine !== "Manabrew");
+  const firstRoom = openRooms[0];
+  const podDetail = !connected
+    ? connecting
+      ? `Connecting to the server…`
+      : `Server offline`
+    : firstRoom
+      ? `${firstRoom.room_name} · ${firstRoom.players.filter((p) => !p.is_bot).length} of ${firstRoom.max_players} seated`
+      : `No open tables yet`;
+
   useEffect(() => {
     const name = relayUsername();
     if (
@@ -101,114 +143,100 @@ export function PlayHome() {
     }, 5000);
     return () => clearInterval(id);
   }, [connected, listPlayers, listRooms, resumePending]);
+
   return (
-    <div className="relative h-full min-h-0 overflow-hidden">
-      <div className="relative z-10 h-full overflow-y-auto pb-[max(0px,calc(100dvh-var(--visual-viewport-height)-var(--visual-viewport-top)))]">
-        <div
+    <div className="h-full min-h-0 overflow-y-auto">
+      <div className="mx-auto flex w-full max-w-[90rem] flex-col gap-8 px-5 py-7 sm:px-8 lg:px-10">
+        <header className="flex flex-wrap items-end justify-between gap-3">
+          <h1 className="font-serif text-4xl font-extrabold tracking-[-0.015em] text-balance">
+            Ready to play?
+          </h1>
+          <div className="flex flex-wrap gap-2 text-ui-label">
+            <span className="rounded-full border border-border bg-card px-3 py-1.5">
+              Playing as <b className="font-semibold">{serverUsername || `guest`}</b>
+            </span>
+            {connected && (
+              <span className="rounded-full border border-border bg-card px-3 py-1.5 tabular-nums">
+                {players.length} online
+              </span>
+            )}
+          </div>
+        </header>
+
+        <UpdateCallout />
+
+        {resumeSession && (
+          <RejoinMatchCard session={resumeSession} onAbandoned={() => setResumeSession(null)} />
+        )}
+
+        <section
+          aria-label={`Ways to play`}
           className={cn(
-            "flex min-h-full w-full flex-col gap-6 px-4 py-6 sm:gap-7 sm:px-6 sm:py-9 lg:px-8",
-            compact && "gap-3 py-3 sm:gap-3 sm:py-3",
+            "grid gap-5 md:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1fr]",
+            resumePending && "hidden",
           )}
         >
-          <header className={cn("max-w-xl sm:pt-2", compact && "sm:pt-0")}>
-            <h1
-              className={cn(
-                "font-serif text-3xl font-semibold tracking-tight text-foreground sm:text-4xl",
-                compact && "text-2xl sm:text-2xl",
-              )}
-            >
-              Ready to play?
-            </h1>
-            <p
-              className={cn(
-                "mt-2 text-ui-body leading-relaxed text-muted-foreground",
-                compact && "mt-1 text-ui-body",
-              )}
-            >
-              Start a match your way, or open a deck from your collection.
-            </p>
-          </header>
+          <WrapperTile
+            tone="pink"
+            title={`Play the pod`}
+            detail={podDetail}
+            action={firstRoom ? `Take a seat` : `Open a table`}
+            icon={Users}
+            onClick={() => navigate(ROUTES.LOBBY)}
+            wide
+          />
+          <WrapperTile
+            tone="teal"
+            title={`Practice vs AI`}
+            detail={`Any deck, any format`}
+            action={`Start a game`}
+            icon={Swords}
+            onClick={() => navigate(ROUTES.PLAY_OFFLINE_CONSTRUCTED)}
+          />
+          <WrapperTile
+            tone="violet"
+            title={`Draft and sealed`}
+            detail={`Crack packs and build on the spot`}
+            action={`Open packs`}
+            icon={PackageOpen}
+            onClick={() => navigate(ROUTES.PLAY_OFFLINE_LIMITED)}
+          />
+        </section>
 
-          <UpdateCallout />
-
-          {!resumePending && <GuestNudge />}
-
-          {resumeSession && (
-            <RejoinMatchCard session={resumeSession} onAbandoned={() => setResumeSession(null)} />
-          )}
-
-          <div
-            className={cn(
-              "flex flex-col gap-4 motion-safe:animate-onboard-fade-up sm:gap-5",
-              resumePending && "hidden",
-            )}
-          >
-            <section aria-label={`Play modes`} className="grid gap-4 md:grid-cols-2">
-              {MODES.map(({ to, label, desc, icon, image, imageClassName, tone }) => (
-                <FeatureTile
-                  key={to}
-                  to={to}
-                  label={label}
-                  desc={desc}
-                  icon={icon}
-                  image={image}
-                  imageClassName={imageClassName}
-                  tone={tone}
-                  size="lg"
-                  compact={compact}
-                  footer={
-                    to === ROUTES.LOBBY && lobbyTeaser ? (
-                      <span className="mt-1.5 flex items-center gap-1.5 text-ui-meta font-medium text-primary">
-                        <span className="relative flex h-1.5 w-1.5">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
-                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
-                        </span>
-                        {lobbyTeaser}
+        {connected && openRooms.length > 0 && !resumePending && (
+          <section aria-labelledby="open-tables">
+            <h2 id="open-tables" className="mb-3 font-serif text-xl font-extrabold">
+              Open tables
+            </h2>
+            <ul className="grid gap-3 lg:grid-cols-2">
+              {openRooms.map((room) => (
+                <li key={room.room_id}>
+                  <button
+                    type="button"
+                    onClick={() => navigate(ROUTES.LOBBY)}
+                    className="flex w-full items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3 text-left motion-safe:transition-colors hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <span>
+                      <b className="block font-semibold">{room.room_name}</b>
+                      <span className="text-ui-meta text-muted-foreground">
+                        {room.format === "Any" ? `Any format` : room.format} · {room.engine}
                       </span>
-                    ) : undefined
-                  }
-                />
+                    </span>
+                    <SeatDots room={room} />
+                  </button>
+                </li>
               ))}
-            </section>
-          </div>
+            </ul>
+          </section>
+        )}
 
-          <div
-            className={cn("motion-safe:animate-onboard-fade-up", resumePending && "hidden")}
-            style={{ animationDelay: "80ms" }}
-          >
-            <PlayDeckShelf
-              onPlay={quickPlay}
-              onPlayPreset={quickPlayPreset}
-              onPlayCommunity={quickPlayCommunity}
-              pendingDeckId={pendingDeckId}
-            />
-          </div>
-
-          {communityEnabled && (
-            <div
-              className={cn("motion-safe:animate-onboard-fade-up", resumePending && "hidden")}
-              style={{ animationDelay: "140ms" }}
-            >
-              <FeatureTile
-                to={ROUTES.HUB}
-                label={`Explore community decks`}
-                desc="Browse complete decklists, discover popular builds, and save a version to your collection."
-                icon={LibraryBig}
-                tone="community"
-                size="sm"
-              />
-            </div>
-          )}
-
-          <div
-            className={cn(
-              "mt-auto flex flex-col gap-6 motion-safe:animate-onboard-fade-up sm:gap-8",
-              resumePending && "hidden",
-            )}
-            style={{ animationDelay: "200ms" }}
-          >
-            <PlayHomeLinks />
-          </div>
+        <div className={cn(resumePending && "hidden")}>
+          <PlayDeckShelf
+            onPlay={quickPlay}
+            onPlayPreset={quickPlayPreset}
+            onPlayCommunity={quickPlayCommunity}
+            pendingDeckId={pendingDeckId}
+          />
         </div>
       </div>
     </div>

@@ -28,7 +28,7 @@ function VideoTile({
     <figure
       className={cn(
         "relative h-30 w-40 shrink-0 overflow-hidden rounded-lg border border-border/70 bg-black shadow-lg transition-shadow motion-reduce:transition-none",
-        speaking && "ring-2 ring-legality-legal/80",
+        speaking && "ring-2 ring-brand-accent",
       )}
     >
       {/* Audio plays through the voice connection; the tile is video only. */}

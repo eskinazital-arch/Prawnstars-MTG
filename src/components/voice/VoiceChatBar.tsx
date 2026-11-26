@@ -32,7 +32,7 @@ function SpeakerChip({
       title={status ?? name}
       className={cn(
         "inline-flex max-w-40 items-center gap-1 truncate rounded-full border px-2 py-0.5 text-ui-meta transition-shadow motion-reduce:transition-none",
-        speaking && "border-legality-legal ring-2 ring-legality-legal/60",
+        speaking && "border-brand-accent ring-2 ring-brand-accent/60",
         peer === undefined && name !== `You` && "opacity-50",
         peer?.state === "failed" && "border-destructive/60 text-destructive",
       )}

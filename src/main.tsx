@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
-import "@fontsource/alegreya-sans/700.css";
-import "@fontsource-variable/source-sans-3";
-import "@fontsource-variable/source-sans-3/wght-italic.css";
+import "@fontsource-variable/bricolage-grotesque";
+import "@fontsource-variable/figtree";
+import "@fontsource-variable/figtree/wght-italic.css";
 import "./index.css";
 import App from "./App.tsx";
 import { registerConsoleHooks } from "./lib/consoleHooks";

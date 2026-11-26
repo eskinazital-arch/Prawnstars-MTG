@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Source Sans 3 Variable", system-ui, -apple-system, sans-serif;
-  --font-serif: "Alegreya Sans", system-ui, -apple-system, sans-serif;
-  --font-game: "Source Sans 3 Variable", system-ui, -apple-system, sans-serif;
+  --font-sans: "Figtree Variable", system-ui, -apple-system, sans-serif;
+  --font-serif: "Bricolage Grotesque Variable", system-ui, -apple-system, sans-serif;
+  --font-game: "Figtree Variable", system-ui, -apple-system, sans-serif;
 
   --color-border: var(--border);
   --color-input: var(--input);
@@ -553,6 +553,16 @@
   .animate-draft-card-pick {
     animation: none !important;
   }
+}
+
+/* Booster-wrapper seam: a crimped zigzag cut along the top edge of a tile. */
+@utility crimp-top {
+  -webkit-mask:
+    conic-gradient(from -45deg at bottom, #000 90deg, #0000 0) top / 14px 7px repeat-x,
+    linear-gradient(#000 0 0) bottom / 100% calc(100% - 7px) no-repeat;
+  mask:
+    conic-gradient(from -45deg at bottom, #000 90deg, #0000 0) top / 14px 7px repeat-x,
+    linear-gradient(#000 0 0) bottom / 100% calc(100% - 7px) no-repeat;
 }
 
 @utility no-scrollbar {
