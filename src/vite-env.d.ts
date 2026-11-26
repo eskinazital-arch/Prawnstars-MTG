@@ -8,6 +8,8 @@ interface ImportMetaEnv {
   readonly VITE_RELAY_HOST?: string;
   readonly VITE_RELAY_PORT?: string;
   readonly VITE_RELAY_PASSWORD?: string;
+  /** Voice chat ICE servers: JSON RTCIceServer[] or a comma-separated url list. */
+  readonly VITE_VOICE_ICE_SERVERS?: string;
   readonly VITE_FARO_ENABLED?: string;
   readonly VITE_FARO_COLLECTOR_URL?: string;
   readonly VITE_FARO_ENVIRONMENT?: string;
